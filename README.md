@@ -10,3 +10,10 @@ Robin Henrik Neem - Project Leader / Manager, editor, presenter
 - Add expenses with payer, amount, and participants
 - View live balances and suggested “Settle Up” payments
 - Secure login & cloud sync with Firebase
+
+# Tools & Frameworks
+- Android Studio
+- Kotlin
+- Git
+- Firebase Authentication
+- Jetpack Compose 
