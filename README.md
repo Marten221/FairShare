@@ -1,7 +1,8 @@
 # FairShare
 Our mobile app helps groups of friends, roommates, or colleagues track shared expenses and settle debts easily. Users can create groups, add expenses, assign who paid and who owes, and the app automatically calculates balances. It simplifies expense tracking, reduces confusion, and ensures everyone pays their fair share.
 # Team members
-Marten Ojasaar - Lead Developer, researcher
+Marten Ojasaar - Lead Developer, researcher 
+
 Robin Henrik Neem - Project Leader / Manager, editor, presenter
 
 # Planned features
