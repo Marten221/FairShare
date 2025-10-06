@@ -7,16 +7,19 @@ plugins {
 }
 
 android {
-    namespace = "ee.ut.cs.shoppinglist"
+    namespace = "com.example.fairshare"
     compileSdk = 36
+
     defaultConfig {
-        applicationId = "ee.ut.cs.shoppinglist"
+        applicationId = "com.example.fairshare"
         minSdk = 24
         targetSdk = 36
         versionCode = 1
         versionName = "1.0"
+
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
+
     buildTypes {
         release {
             isMinifyEnabled = false
@@ -57,10 +60,10 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
-// Lifecycle & ViewModel
+    // Lifecycle & ViewModel
     implementation(libs.androidx.lifecycle.runtime.ktx.v286)
     implementation(libs.androidx.lifecycle.viewmodel.compose)
-// Coroutines
+    // Coroutines
     implementation(libs.kotlinx.coroutines.core)
     implementation(libs.kotlinx.coroutines.android)
 }
