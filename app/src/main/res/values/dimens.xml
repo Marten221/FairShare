@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Spacing scale -->
+    <dimen name="spacing_xs">2dp</dimen>
+    <dimen name="spacing_sm">8dp</dimen>
+    <dimen name="spacing_md">12dp</dimen>
+    <dimen name="spacing_l">16dp</dimen>
+
+    <!-- Row / item -->
+    <dimen name="row_padding">12dp</dimen>
+    <dimen name="avatar_size">48dp</dimen>
+
+    <!-- Font sizes -->
+    <dimen name="title">48sp</dimen>
+    <dimen name="button_text">24sp</dimen>
+
+</resources>
