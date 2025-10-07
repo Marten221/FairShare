@@ -1,22 +1,26 @@
 package com.example.fairshare.ui.viewmodels
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.example.fairshare.MainApplication
 import com.example.fairshare.domain.model.Group
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.launch
 
 class GroupsListViewModel : ViewModel() {
-    private val _groups = MutableStateFlow<List<Group>>( emptyList())
-
-    val groups = _groups.asStateFlow()
-
-    init {
-        _groups.value = listOf(
-            Group(name = "Roommates @ Riia 9", memberCount = 2),
-            Group(name = "Italy 2024", memberCount = 6),
-            Group(name = "FairShare Project", memberCount = 2)
-        )
+    val groupDAO = MainApplication.groupDatabase.getGroupDAO()
+    fun addGroup(name: String) {
+        viewModelScope.launch(Dispatchers.IO) {
+            groupDAO.addGroup(Group(name = name))
+        }
     }
 
-    fun getGroupById(id: String): Group? = _groups.value.find { it.id == id }
+    fun getAllGroups(): Flow<List<Group>> {
+        return groupDAO.getAllGroups()
+    }
+
+    fun getGroupById(id: String): Flow<Group> {
+        return groupDAO.getGroupById(id)
+    }
 }
