@@ -5,12 +5,14 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.runtime.Composable
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.fairshare.ui.screens.GroupsListScreen
 import com.example.fairshare.ui.screens.HomePageScreen
 import com.example.fairshare.ui.theme.FairshareTheme
+import com.example.fairshare.ui.viewmodels.GroupsListViewModel
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -37,7 +39,8 @@ private fun AppNav() {
             )
         }
         composable("groups") {
-            GroupsListScreen(onBack = { nav.popBackStack()})
+            val vm: GroupsListViewModel = viewModel()
+            GroupsListScreen(vm, onBack = { nav.popBackStack()})
         }
     }
 }

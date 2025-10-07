@@ -36,9 +36,7 @@ fun HomePageScreen(
 ) {
     var showSignIn by rememberSaveable { mutableStateOf(false) }
 
-    Scaffold(
-        floatingActionButton = {/* TODO remove */}
-    ) { padding ->
+    Scaffold() { padding ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -100,7 +98,7 @@ private fun SignInDialog(
         onDismissRequest = onDismiss,
         title = { Text("Sign In") },
         text = {
-            Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+            Column(verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.spacing_md))) {
                 OutlinedTextField(
                     value = email,
                     onValueChange = { email = it },

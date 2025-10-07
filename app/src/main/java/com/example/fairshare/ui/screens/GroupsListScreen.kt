@@ -23,20 +23,17 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
-
-
-data class Group(val id: String, val name: String, val memberCount: Int) // TODO Move to model package
+import androidx.compose.ui.res.dimensionResource
+import com.example.fairshare.R
+import com.example.fairshare.ui.viewmodels.GroupsListViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun GroupsListScreen(onBack: () -> Unit) {
-    val groups = listOf(
-        Group("1", "Roommates @ Riia 9", 2),
-        Group("2", "Italy 2024", 6),
-        Group("3", "FairShare Project", 2)
-    )
+fun GroupsListScreen(viewModel: GroupsListViewModel, onBack: () -> Unit) {
+    val groups by viewModel.groups.collectAsState()
     Scaffold(
         topBar = {
             TopAppBar(
@@ -58,8 +55,8 @@ fun GroupsListScreen(onBack: () -> Unit) {
             modifier = Modifier
                 .fillMaxSize()
                 .padding(padding)
-                .padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
+                .padding(dimensionResource(R.dimen.spacing_l)),
+            verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.spacing_sm))
         ) {
             items(groups) { g ->
                 ElevatedCard(
@@ -67,9 +64,9 @@ fun GroupsListScreen(onBack: () -> Unit) {
                         .fillMaxWidth()
                         .clickable { /* TODO: navigate to group detail */ }
                 ) {
-                    Column(Modifier.padding(16.dp)) {
+                    Column(Modifier.padding(dimensionResource(R.dimen.spacing_l))) {
                         Text(g.name, style = MaterialTheme.typography.titleMedium)
-                        Spacer(Modifier.height(4.dp))
+                        Spacer(Modifier.height(dimensionResource(R.dimen.spacing_xs)))
                         Text("${g.memberCount} members", style = MaterialTheme.typography.bodyMedium)
                     }
                 }
