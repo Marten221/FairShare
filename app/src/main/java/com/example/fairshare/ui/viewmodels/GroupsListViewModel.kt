@@ -17,4 +17,6 @@ class GroupsListViewModel : ViewModel() {
             Group(name = "FairShare Project", memberCount = 2)
         )
     }
+
+    fun getGroupById(id: String): Group? = _groups.value.find { it.id == id }
 }
