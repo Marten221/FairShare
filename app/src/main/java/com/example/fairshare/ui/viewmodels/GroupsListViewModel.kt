@@ -10,9 +10,9 @@ import kotlinx.coroutines.launch
 
 class GroupsListViewModel : ViewModel() {
     val groupDAO = MainApplication.groupDatabase.getGroupDAO()
-    fun addGroup(name: String, memberCount: Int) {
+    fun addGroup(name: String) {
         viewModelScope.launch(Dispatchers.IO) {
-            groupDAO.addGroup(Group(name = name, memberCount = memberCount))
+            groupDAO.addGroup(Group(name = name))
         }
     }
 
