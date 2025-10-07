@@ -32,7 +32,11 @@ import com.example.fairshare.ui.viewmodels.GroupsListViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun GroupsListScreen(viewModel: GroupsListViewModel, onBack: () -> Unit) {
+fun GroupsListScreen(
+    viewModel: GroupsListViewModel,
+    onBack: () -> Unit,
+    onGroupClick: (String) -> Unit
+) {
     val groups by viewModel.groups.collectAsState()
     Scaffold(
         topBar = {
@@ -62,7 +66,7 @@ fun GroupsListScreen(viewModel: GroupsListViewModel, onBack: () -> Unit) {
                 ElevatedCard(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .clickable { /* TODO: navigate to group detail */ }
+                        .clickable { onGroupClick(g.id) }
                 ) {
                     Column(Modifier.padding(dimensionResource(R.dimen.spacing_l))) {
                         Text(g.name, style = MaterialTheme.typography.titleMedium)
