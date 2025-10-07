@@ -1,6 +1,7 @@
 package com.example.fairshare
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -40,7 +41,7 @@ fun AppNav() {
             val group = groupId?.let { vm.getGroupById(it)}
 
             GroupDetailScreen(
-                group = group,
+                group = group?.collectAsState(initial = null)?.value,
                 onBack = { nav.popBackStack() }
             )
         }

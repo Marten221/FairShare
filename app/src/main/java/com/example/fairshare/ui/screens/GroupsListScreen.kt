@@ -24,7 +24,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import com.example.fairshare.R
@@ -37,7 +36,7 @@ fun GroupsListScreen(
     onBack: () -> Unit,
     onGroupClick: (String) -> Unit
 ) {
-    val groups by viewModel.groups.collectAsState()
+    val groups = viewModel.getAllGroups().collectAsState(initial = emptyList())
     Scaffold(
         topBar = {
             TopAppBar(
@@ -50,7 +49,12 @@ fun GroupsListScreen(
             )
         },
         floatingActionButton = {
-            FloatingActionButton(onClick = { /* TODO: create group */ }) {
+            FloatingActionButton(onClick = {
+                viewModel.addGroup(
+                    "test",
+                    3
+                )
+            }) { // todo make a form for creating a new group
                 Icon(Icons.Default.Add, contentDescription = "Create Group")
             }
         }
@@ -62,16 +66,30 @@ fun GroupsListScreen(
                 .padding(dimensionResource(R.dimen.spacing_l)),
             verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.spacing_sm))
         ) {
-            items(groups) { g ->
-                ElevatedCard(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .clickable { onGroupClick(g.id) }
-                ) {
-                    Column(Modifier.padding(dimensionResource(R.dimen.spacing_l))) {
-                        Text(g.name, style = MaterialTheme.typography.titleMedium)
-                        Spacer(Modifier.height(dimensionResource(R.dimen.spacing_xs)))
-                        Text("${g.memberCount} members", style = MaterialTheme.typography.bodyMedium)
+            if (groups.value.isEmpty()) {
+                item {
+                    Text(
+                        text = "No groups yet.",
+                        style = MaterialTheme.typography.bodyLarge,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        modifier = Modifier.padding(dimensionResource(R.dimen.spacing_l))
+                    )
+                }
+            } else {
+                items(groups.value) { g ->
+                    ElevatedCard(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable { onGroupClick(g.id) }
+                    ) {
+                        Column(Modifier.padding(dimensionResource(R.dimen.spacing_l))) {
+                            Text(g.name, style = MaterialTheme.typography.titleMedium)
+                            Spacer(Modifier.height(dimensionResource(R.dimen.spacing_xs)))
+                            Text(
+                                "${g.memberCount} members",
+                                style = MaterialTheme.typography.bodyMedium
+                            )
+                        }
                     }
                 }
             }
