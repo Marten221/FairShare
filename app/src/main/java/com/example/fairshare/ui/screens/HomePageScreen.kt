@@ -16,6 +16,8 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -32,13 +34,34 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.fairshare.R
+import com.example.fairshare.ui.viewmodels.AuthState
+import com.example.fairshare.ui.viewmodels.AuthViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomePageScreen(
     onSignInSuccess: () -> Unit
 ) {
+    val vm: AuthViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
+    val state by vm.state.collectAsState()
+
     var showSignIn by rememberSaveable { mutableStateOf(false) }
+    var errorMsg by rememberSaveable { mutableStateOf<String?>(null) }
+
+    LaunchedEffect(state) {
+        when (state) {
+            is AuthState.Success -> {
+                showSignIn = false
+                vm.reset()
+                onSignInSuccess() // navigates to "groups"
+            }
+            is AuthState.Error -> {
+                errorMsg = (state as AuthState.Error).message
+                vm.reset()
+            }
+            else -> {}
+        }
+    }
 
     Scaffold() { padding ->
         Column(
@@ -81,10 +104,19 @@ fun HomePageScreen(
     if (showSignIn) {
         SignInDialog(
             onDismiss = { showSignIn = false},
-            onSubmit = {email, password ->
-                //no auth logic for now
-                showSignIn = false
-                onSignInSuccess()
+            onSubmit = { email, password ->
+                vm.login(email, password) // <-- call API
+            }
+        )
+    }
+
+    if (errorMsg != null) {
+        AlertDialog(
+            onDismissRequest = { errorMsg = null },
+            title = { Text(stringResource(R.string.sign_in_failed))},
+            text = { Text(errorMsg!!) },
+            confirmButton = {
+                TextButton(onClick = { errorMsg = null }) { Text("OK") }
             }
         )
     }
