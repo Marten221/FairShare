@@ -17,3 +17,6 @@ Robin Henrik Neem - Project Leader / Manager, editor, presenter
 - Git
 - Firebase Authentication
 - Jetpack Compose 
+
+# Custom API that we are using
+[FairShare API](https://github.com/Marten221/FairShareAPI)
