@@ -48,12 +48,12 @@ fun HomePageScreen(
             Text(
                 text = stringResource(R.string.home_title),
                 fontSize = dimensionResource(R.dimen.title).value.sp,
-                modifier = Modifier.padding(bottom = 82.dp)
+                modifier = Modifier.padding(bottom = dimensionResource(R.dimen.home_title_bottom).value.dp)
             )
 
             Button(
                 onClick = { showSignIn = true },
-                modifier = Modifier.size(width = 200.dp, height = 60.dp)
+                modifier = Modifier.size(width = dimensionResource(R.dimen.button_width).value.dp, height = dimensionResource(R.dimen.button_height).value.dp)
             ) {
                 Text(
                     text = stringResource(R.string.home_sign_in),
@@ -65,7 +65,7 @@ fun HomePageScreen(
                 onClick = {  },
                 modifier = Modifier
                     .padding(top = dimensionResource(R.dimen.spacing_l).value.dp)
-                    .size(width = 200.dp, height = 60.dp)
+                    .size(width = dimensionResource(R.dimen.button_width).value.dp, height = dimensionResource(R.dimen.button_height).value.dp)
             ) {
                 Text(
                     text = stringResource(R.string.home_sign_up),

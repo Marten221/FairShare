@@ -15,4 +15,9 @@
     <dimen name="title">48sp</dimen>
     <dimen name="button_text">24sp</dimen>
 
+    <!-- Home screen layout constants -->
+    <dimen name="home_title_bottom">82dp</dimen>
+    <dimen name="button_width">200dp</dimen>
+    <dimen name="button_height">60dp</dimen>
+
 </resources>
