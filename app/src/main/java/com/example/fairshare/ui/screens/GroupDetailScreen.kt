@@ -21,6 +21,8 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.res.pluralStringResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import com.example.fairshare.R
 import com.example.fairshare.domain.model.Group
@@ -36,14 +38,14 @@ fun GroupDetailScreen(
             TopAppBar(
                 title = {
                     Text(
-                        group?.name ?: "Group",
+                        group?.name ?: stringResource(R.string.group_fallback_title),
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis
                     )
                 },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(R.string.nav_back))
                     }
                 }
             )
@@ -57,11 +59,8 @@ fun GroupDetailScreen(
                     .padding(dimensionResource(R.dimen.spacing_l)),
                 verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.spacing_md))
             ) {
-                Text("Group not found.", style = MaterialTheme.typography.titleMedium)
-                Text(
-                    "The group you tried to open doesn’t exist.",
-                    style = MaterialTheme.typography.bodyMedium
-                )
+                Text(stringResource(R.string.group_not_found_title), style = MaterialTheme.typography.titleMedium)
+                Text(stringResource(R.string.group_not_found_body), style = MaterialTheme.typography.bodyMedium)
             }
             return@Scaffold
         }
@@ -73,16 +72,16 @@ fun GroupDetailScreen(
                 .padding(dimensionResource(R.dimen.spacing_l)),
             verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.spacing_md))
         ) {
-            Text("${group.memberCount} members", style = MaterialTheme.typography.bodyMedium)
-            Text("Group ID: ${group.id}", style = MaterialTheme.typography.bodySmall)
+            Text(pluralStringResource(R.plurals.members_count, group.memberCount, group.memberCount), style = MaterialTheme.typography.bodyMedium)
+            Text(stringResource(R.string.group_id_label, group.id), style = MaterialTheme.typography.bodySmall)
 
             Spacer(Modifier.height(dimensionResource(R.dimen.spacing_md)))
             HorizontalDivider(Modifier, DividerDefaults.Thickness, DividerDefaults.color)
 
             // Expenses placeholder
-            Text("Expenses", style = MaterialTheme.typography.titleMedium)
+            Text(stringResource(R.string.expenses_title), style = MaterialTheme.typography.titleMedium)
             Text(
-                "No expenses yet.",
+                stringResource(R.string.expenses_empty),
                 style = MaterialTheme.typography.bodyMedium,
                 modifier = Modifier.fillMaxWidth()
             )

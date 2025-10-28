@@ -22,6 +22,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
@@ -45,7 +46,7 @@ fun HomePageScreen(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
-                text = "FairShare",
+                text = stringResource(R.string.home_title),
                 fontSize = dimensionResource(R.dimen.title).value.sp,
                 modifier = Modifier.padding(bottom = 82.dp)
             )
@@ -55,7 +56,7 @@ fun HomePageScreen(
                 modifier = Modifier.size(width = 200.dp, height = 60.dp)
             ) {
                 Text(
-                    text = "Sign In",
+                    text = stringResource(R.string.home_sign_in),
                     fontSize = dimensionResource(R.dimen.button_text).value.sp
                 )
             }
@@ -67,7 +68,7 @@ fun HomePageScreen(
                     .size(width = 200.dp, height = 60.dp)
             ) {
                 Text(
-                    text = "Sign Up",
+                    text = stringResource(R.string.home_sign_up),
                     fontSize = dimensionResource(R.dimen.button_text).value.sp
                 )
             }
@@ -96,13 +97,13 @@ private fun SignInDialog(
 
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text("Sign In") },
+        title = { Text(stringResource(R.string.auth_title_sign_in)) },
         text = {
             Column(verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.spacing_md))) {
                 OutlinedTextField(
                     value = email,
                     onValueChange = { email = it },
-                    label = { Text("Email") },
+                    label = { Text(stringResource(R.string.auth_label_email)) },
                     singleLine = true,
                     keyboardOptions = KeyboardOptions(
                         keyboardType = KeyboardType.Email,
@@ -114,7 +115,7 @@ private fun SignInDialog(
                 OutlinedTextField(
                     value = password,
                     onValueChange = { password = it },
-                    label = { Text("Password") },
+                    label = { Text(stringResource(R.string.auth_label_password)) },
                     singleLine = true,
                     visualTransformation = PasswordVisualTransformation(),
                     keyboardOptions = KeyboardOptions(
@@ -130,11 +131,11 @@ private fun SignInDialog(
                 onClick = { onSubmit(email, password) },
                 enabled = email.isNotBlank() && password.isNotBlank()
             ) {
-                Text("Continue")
+                Text(stringResource(R.string.auth_continue))
             }
         },
         dismissButton = {
-            TextButton(onClick = onDismiss) { Text("Cancel") }
+            TextButton(onClick = onDismiss) { Text(stringResource(R.string.auth_cancel)) }
         }
     )
 }

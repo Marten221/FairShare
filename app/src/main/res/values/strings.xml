@@ -1,3 +1,39 @@
 <resources>
-    <string name="app_name">Fairshare</string>
+    <string name="app_name">FairShare</string>
+
+    <!-- Home -->
+    <string name="home_title">FairShare</string>
+    <string name="home_sign_in">Sign In</string>
+    <string name="home_sign_up">Sign Up</string>
+
+    <!-- Auth dialog -->
+    <string name="auth_title_sign_in">Sign In</string>
+    <string name="auth_label_email">Email</string>
+    <string name="auth_label_password">Password</string>
+    <string name="auth_continue">Continue</string>
+    <string name="auth_cancel">Cancel</string>
+    <string name="auth_email_error">Please enter a valid email address</string>
+
+    <!-- Groups list -->
+    <string name="groups_title">Your Groups</string>
+    <string name="nav_back">Back</string>
+    <string name="groups_fab_content_desc">Create Group</string>
+    <string name="groups_empty">No groups yet.</string>
+
+    <!-- Create group dialog -->
+    <string name="create_group_title">Create Group</string>
+    <string name="create_group_label">Group name</string>
+    <string name="create_group_cta">Create</string>
+
+    <!-- Group detail -->
+    <string name="group_fallback_title">Group</string>
+    <string name="group_not_found_title">Group not found.</string>
+    <string name="group_not_found_body">The group you tried to open doesn’t exist.</string>
+    <plurals name="members_count">
+        <item quantity="one">%d member</item>
+        <item quantity="other">%d members</item>
+    </plurals>
+    <string name="group_id_label">Group ID: %1$s</string>
+    <string name="expenses_title">Expenses</string>
+    <string name="expenses_empty">No expenses yet.</string>
 </resources>

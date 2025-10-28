@@ -33,6 +33,8 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.res.pluralStringResource
+import androidx.compose.ui.res.stringResource
 import com.example.fairshare.R
 import com.example.fairshare.ui.viewmodels.GroupsListViewModel
 
@@ -48,7 +50,7 @@ fun GroupsListScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Your Groups") },
+                title = { Text(stringResource(R.string.groups_title)) },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
                         Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
@@ -58,7 +60,7 @@ fun GroupsListScreen(
         },
         floatingActionButton = {
             FloatingActionButton(onClick = { showAddGroupDialog = true }) {
-                Icon(Icons.Default.Add, contentDescription = "Create Group")
+                Icon(Icons.Default.Add, contentDescription = stringResource(R.string.groups_fab_content_desc))
             }
         }
     ) { padding ->
@@ -72,7 +74,7 @@ fun GroupsListScreen(
             if (groups.value.isEmpty()) {
                 item {
                     Text(
-                        text = "No groups yet.",
+                        text = stringResource(R.string.groups_empty),
                         style = MaterialTheme.typography.bodyLarge,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                         modifier = Modifier.padding(dimensionResource(R.dimen.spacing_l))
@@ -89,7 +91,7 @@ fun GroupsListScreen(
                             Text(g.name, style = MaterialTheme.typography.titleMedium)
                             Spacer(Modifier.height(dimensionResource(R.dimen.spacing_xs)))
                             Text(
-                                "${g.memberCount} members",
+                                pluralStringResource(R.plurals.members_count, g.memberCount, g.memberCount),
                                 style = MaterialTheme.typography.bodyMedium
                             )
                         }
@@ -119,13 +121,13 @@ private fun AddGroupDialog(
 
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text("Create Group") },
+        title = { Text(stringResource(R.string.create_group_title)) },
         text = {
             Column(verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.spacing_md))) {
                 OutlinedTextField(
                     value = name,
                     onValueChange = { name = it },
-                    label = { Text("Group name") },
+                    label = { Text(stringResource(R.string.create_group_label)) },
                     singleLine = true,
                     modifier = Modifier.fillMaxWidth()
                 )
@@ -136,13 +138,11 @@ private fun AddGroupDialog(
                 onClick = { onSubmit(name) },
                 enabled = name.isNotBlank()
             ) {
-                Text("Create")
+                Text(stringResource(R.string.create_group_cta))
             }
         },
         dismissButton = {
-            TextButton(onClick = onDismiss) {
-                Text("Cancel")
-            }
+            TextButton(onClick = onDismiss) { Text(stringResource(R.string.auth_cancel)) }
         }
     )
 }
