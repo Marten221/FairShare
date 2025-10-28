@@ -1,7 +1,7 @@
 # Step 3 – API & Error Handling Report
 
 ## Our custom API
-[FairSHare API](https://github.com/Marten221/FairShareAPI)
+[FairShare API](https://github.com/Marten221/FairShareAPI)
 
 ## Which API was chosen and why
 We use **Retrofit** (with OkHttp). It’s simple, works well with coroutines, and is standard on Android. Base URL: `https://ojasaar.com/fairshareapi/`.
