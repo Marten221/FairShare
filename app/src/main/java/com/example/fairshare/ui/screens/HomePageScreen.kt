@@ -46,12 +46,14 @@ fun HomePageScreen(
     val state by vm.state.collectAsState()
 
     var showSignIn by rememberSaveable { mutableStateOf(false) }
+    var showSignUp by rememberSaveable { mutableStateOf(false) }
     var errorMsg by rememberSaveable { mutableStateOf<String?>(null) }
 
     LaunchedEffect(state) {
         when (state) {
             is AuthState.Success -> {
                 showSignIn = false
+                showSignUp = false
                 vm.reset()
                 onSignInSuccess() // navigates to "groups"
             }
@@ -88,7 +90,7 @@ fun HomePageScreen(
             }
 
             Button(
-                onClick = {  },
+                onClick = { showSignUp = true },
                 modifier = Modifier
                     .padding(top = dimensionResource(R.dimen.spacing_l).value.dp)
                     .size(width = dimensionResource(R.dimen.button_width).value.dp, height = dimensionResource(R.dimen.button_height).value.dp)
@@ -105,8 +107,15 @@ fun HomePageScreen(
         SignInDialog(
             onDismiss = { showSignIn = false},
             onSubmit = { email, password ->
-                vm.login(email, password) // <-- call API
+                vm.login(email, password)
             }
+        )
+    }
+
+    if (showSignUp) {
+        SignUpDialog(
+            onDismiss = { showSignUp = false },
+            onSubmit = { email, password -> vm.register(email, password) }
         )
     }
 
@@ -182,5 +191,53 @@ private fun SignInDialog(
         dismissButton = {
             TextButton(onClick = onDismiss) { Text(stringResource(R.string.auth_cancel)) }
         }
+    )
+}
+
+@Composable
+private fun SignUpDialog(
+    onDismiss: () -> Unit,
+    onSubmit: (email: String, password: String) -> Unit
+) {
+    var email by rememberSaveable { mutableStateOf("") }
+    var password by rememberSaveable { mutableStateOf("") }
+    val isEmailValid by remember(email) {
+        derivedStateOf { Patterns.EMAIL_ADDRESS.matcher(email).matches() }
+    }
+
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text(stringResource(R.string.auth_title_sign_up)) },
+        text = {
+            Column(verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.spacing_md))) {
+                OutlinedTextField(
+                    value = email, onValueChange = { email = it },
+                    label = { Text(stringResource(R.string.auth_label_email)) },
+                    singleLine = true,
+                    isError = email.isNotBlank() && !isEmailValid,
+                    supportingText = {
+                        if (email.isNotBlank() && !isEmailValid) {
+                            Text(stringResource(R.string.auth_email_error))
+                        }
+                    },
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email, imeAction = ImeAction.Next),
+                    modifier = Modifier.fillMaxWidth()
+                )
+                OutlinedTextField(
+                    value = password, onValueChange = { password = it },
+                    label = { Text(stringResource(R.string.auth_label_password)) },
+                    singleLine = true,
+                    visualTransformation = PasswordVisualTransformation(),
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password, imeAction = ImeAction.Done),
+                    modifier = Modifier.fillMaxWidth()
+                )
+            }
+        },
+        confirmButton = {
+            TextButton(onClick = { onSubmit(email, password) }, enabled = isEmailValid && password.isNotBlank()) {
+                Text(stringResource(R.string.auth_continue))
+            }
+        },
+        dismissButton = { TextButton(onClick = onDismiss) { Text(stringResource(R.string.auth_cancel)) } }
     )
 }
