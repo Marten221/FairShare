@@ -24,6 +24,7 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.sp
 import com.example.fairshare.R
 import com.example.fairshare.domain.model.Group
 
@@ -73,7 +74,11 @@ fun GroupDetailScreen(
             verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.spacing_md))
         ) {
             Text(pluralStringResource(R.plurals.members_count, group.memberCount, group.memberCount), style = MaterialTheme.typography.bodyMedium)
-            Text(stringResource(R.string.group_id_label, group.id), style = MaterialTheme.typography.bodySmall)
+            Text(
+                stringResource(R.string.group_id_label, group.id),
+                style = MaterialTheme.typography.bodySmall,
+                fontSize = dimensionResource(R.dimen.id_text).value.sp,
+            )
 
             Spacer(Modifier.height(dimensionResource(R.dimen.spacing_md)))
             HorizontalDivider(Modifier, DividerDefaults.Thickness, DividerDefaults.color)

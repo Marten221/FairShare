@@ -29,6 +29,12 @@
     <string name="create_group_label">Group name</string>
     <string name="create_group_cta">Create</string>
 
+    <!-- Join group -->
+    <string name="join_group_fab_content_desc">Join Group</string>
+    <string name="join_group_title">Join Group</string>
+    <string name="join_group_label">Group ID</string>
+    <string name="join_group_cta">Join</string>
+
     <!-- Group detail -->
     <string name="group_fallback_title">Group</string>
     <string name="group_not_found_title">Group not found.</string>

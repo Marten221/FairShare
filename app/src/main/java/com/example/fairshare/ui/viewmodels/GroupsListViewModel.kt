@@ -23,7 +23,15 @@ class GroupsListViewModel(
     private val _state = MutableStateFlow<GroupsState>(GroupsState.Idle)
     val state: StateFlow<GroupsState> = _state
 
-    fun addGroup(name: String) = viewModelScope.launch(Dispatchers.IO) { repo.addGroup(name) }
+    fun addGroup(name: String) = viewModelScope.launch(Dispatchers.IO) {
+        repo.addGroup(name)
+        loadGroups()
+    }
+
+    fun joinGroup(id: String) = viewModelScope.launch(Dispatchers.IO) {
+        repo.joinGroup(id)
+        loadGroups()
+    }
 
     fun loadGroups() = viewModelScope.launch {
         _state.value = GroupsState.Loading

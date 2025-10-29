@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -51,6 +52,7 @@ fun GroupsListScreen(
     onGroupClick: (String) -> Unit
 ) {
     var showAddGroupDialog by rememberSaveable { mutableStateOf(false) }
+    var showJoinDialog by rememberSaveable { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
         viewModel.loadGroups()
@@ -70,8 +72,36 @@ fun GroupsListScreen(
             )
         },
         floatingActionButton = {
-            FloatingActionButton(onClick = { showAddGroupDialog = true }) {
-                Icon(Icons.Default.Add, contentDescription = stringResource(R.string.groups_fab_content_desc))
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .navigationBarsPadding()
+                    .padding(bottom = dimensionResource(R.dimen.spacing_l), start = dimensionResource(R.dimen.spacing_xl))
+            ) {
+                // LEFT: Join Group
+                FloatingActionButton(
+                    onClick = { showJoinDialog = true },
+                    modifier = Modifier
+                        .align(Alignment.BottomStart)
+                        .padding(start = dimensionResource(R.dimen.spacing_l))
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Add,
+                        contentDescription = stringResource(R.string.join_group_fab_content_desc)
+                    )
+                }
+                // RIGHT: Create Group
+                FloatingActionButton(
+                    onClick = { showAddGroupDialog = true },
+                    modifier = Modifier
+                        .align(Alignment.BottomEnd)
+                        .padding(end = dimensionResource(R.dimen.spacing_l))
+                ) {
+                    Icon(
+                        Icons.Default.Add,
+                        contentDescription = stringResource(R.string.groups_fab_content_desc)
+                    )
+                }
             }
         }
     ) { padding ->
@@ -144,6 +174,15 @@ fun GroupsListScreen(
         )
 
     }
+    if (showJoinDialog) {
+        JoinGroupDialog(
+            onDismiss = { showJoinDialog = false },
+            onSubmit = { groupId ->
+                viewModel.joinGroup(groupId)
+                showJoinDialog = false
+            }
+        )
+    }
 }
 
 @Composable
@@ -173,6 +212,38 @@ private fun AddGroupDialog(
                 enabled = name.isNotBlank()
             ) {
                 Text(stringResource(R.string.create_group_cta))
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismiss) { Text(stringResource(R.string.auth_cancel)) }
+        }
+    )
+}
+
+@Composable
+private fun JoinGroupDialog(
+    onDismiss: () -> Unit,
+    onSubmit: (groupId: String) -> Unit
+) {
+    var groupId by rememberSaveable { mutableStateOf("") }
+
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text(stringResource(R.string.join_group_title)) },
+        text = {
+            Column(verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.spacing_md))) {
+                OutlinedTextField(
+                    value = groupId,
+                    onValueChange = { groupId = it },
+                    label = { Text(stringResource(R.string.join_group_label)) },
+                    singleLine = true,
+                    modifier = Modifier.fillMaxWidth()
+                )
+            }
+        },
+        confirmButton = {
+            TextButton(onClick = { onSubmit(groupId) }, enabled = groupId.isNotBlank()) {
+                Text(stringResource(R.string.join_group_cta))
             }
         },
         dismissButton = {

@@ -6,6 +6,7 @@
     <dimen name="spacing_sm">8dp</dimen>
     <dimen name="spacing_md">12dp</dimen>
     <dimen name="spacing_l">16dp</dimen>
+    <dimen name="spacing_xl">20dp</dimen>
 
     <!-- Row / item -->
     <dimen name="row_padding">12dp</dimen>
@@ -14,6 +15,7 @@
     <!-- Font sizes -->
     <dimen name="title">48sp</dimen>
     <dimen name="button_text">24sp</dimen>
+    <dimen name="id_text">18sp</dimen>
 
     <!-- Home screen layout constants -->
     <dimen name="home_title_bottom">82dp</dimen>
