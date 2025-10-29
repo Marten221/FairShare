@@ -2,6 +2,7 @@ package com.example.fairshare.ui.screens
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -14,6 +15,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
@@ -26,17 +28,20 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import com.example.fairshare.R
 import com.example.fairshare.ui.viewmodels.GroupsListViewModel
+import com.example.fairshare.ui.viewmodels.GroupsState
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -46,7 +51,13 @@ fun GroupsListScreen(
     onGroupClick: (String) -> Unit
 ) {
     var showAddGroupDialog by rememberSaveable { mutableStateOf(false) }
-    val groups = viewModel.getAllGroups().collectAsState(initial = emptyList())
+
+    LaunchedEffect(Unit) {
+        viewModel.loadGroups()
+    }
+
+    val state by viewModel.state.collectAsState()
+
     Scaffold(
         topBar = {
             TopAppBar(
@@ -64,36 +75,59 @@ fun GroupsListScreen(
             }
         }
     ) { padding ->
-        LazyColumn(
+        Box(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(padding)
-                .padding(dimensionResource(R.dimen.spacing_l)),
-            verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.spacing_sm))
         ) {
-            if (groups.value.isEmpty()) {
-                item {
+            when (val s = state) {
+                is GroupsState.Idle,
+                is GroupsState.Loading -> {
+                    CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
+                }
+
+                is GroupsState.Error -> {
                     Text(
-                        text = stringResource(R.string.groups_empty),
-                        style = MaterialTheme.typography.bodyLarge,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                        modifier = Modifier.padding(dimensionResource(R.dimen.spacing_l))
+                        text = "Failed to load groups: ${s.message}",
+                        modifier = Modifier.align(Alignment.Center),
+                        color = MaterialTheme.colorScheme.error
                     )
                 }
-            } else {
-                items(groups.value) { g ->
-                    ElevatedCard(
+
+                is GroupsState.Success -> {
+                    val groups = s.groups
+                    LazyColumn(
                         modifier = Modifier
-                            .fillMaxWidth()
-                            .clickable { onGroupClick(g.id) }
+                            .fillMaxSize()
+                            .padding(dimensionResource(R.dimen.spacing_l)),
+                        verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.spacing_sm))
                     ) {
-                        Column(Modifier.padding(dimensionResource(R.dimen.spacing_l))) {
-                            Text(g.name, style = MaterialTheme.typography.titleMedium)
-                            Spacer(Modifier.height(dimensionResource(R.dimen.spacing_xs)))
-                            Text(
-                                pluralStringResource(R.plurals.members_count, g.memberCount, g.memberCount),
-                                style = MaterialTheme.typography.bodyMedium
-                            )
+                        if (groups.isEmpty()) {
+                            item {
+                                Text(
+                                    text = stringResource(R.string.groups_empty),
+                                    style = MaterialTheme.typography.bodyLarge,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                    modifier = Modifier.padding(dimensionResource(R.dimen.spacing_l))
+                                )
+                            }
+                        } else {
+                            items(groups) { g ->
+                                ElevatedCard(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .clickable { onGroupClick(g.id) }
+                                ) {
+                                    Column(Modifier.padding(dimensionResource(R.dimen.spacing_l))) {
+                                        Text(g.name, style = MaterialTheme.typography.titleMedium)
+                                        Spacer(Modifier.height(dimensionResource(R.dimen.spacing_xs)))
+                                        Text(
+                                            pluralStringResource(R.plurals.members_count, g.memberCount, g.memberCount),
+                                            style = MaterialTheme.typography.bodyMedium
+                                        )
+                                    }
+                                }
+                            }
                         }
                     }
                 }

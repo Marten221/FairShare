@@ -1,7 +1,9 @@
 package com.example.fairshare
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -12,6 +14,7 @@ import com.example.fairshare.ui.screens.GroupDetailScreen
 import com.example.fairshare.ui.screens.GroupsListScreen
 import com.example.fairshare.ui.screens.HomePageScreen
 import com.example.fairshare.ui.viewmodels.GroupsListViewModel
+import com.example.fairshare.ui.viewmodels.GroupsState
 
 @Composable
 fun AppNav() {
@@ -35,15 +38,27 @@ fun AppNav() {
         }
         composable(
             route = "group/{groupId}",
-            arguments = listOf(navArgument("groupId") { type = NavType.StringType})
+            arguments = listOf(navArgument("groupId") { type = NavType.StringType })
         ) { backStackEntry ->
-            val groupId = backStackEntry.arguments?.getString("groupId")
-            val group = groupId?.let { vm.getGroupById(it)}
+            val groupId = backStackEntry.arguments?.getString("groupId") ?: return@composable
+            val state by vm.state.collectAsState()
 
-            GroupDetailScreen(
-                group = group?.collectAsState(initial = null)?.value,
-                onBack = { nav.popBackStack() }
-            )
+            // Trigger loading once when entering the screen
+            LaunchedEffect(groupId) {
+                vm.loadGroupById(groupId)
+            }
+
+            when (state) {
+                is GroupsState.Success -> {
+                    val group = (state as GroupsState.Success).groups.firstOrNull()
+                    GroupDetailScreen(
+                        group = group,
+                        onBack = { nav.popBackStack() }
+                    )
+                }
+                else -> Unit
+            }
         }
+
     }
 }

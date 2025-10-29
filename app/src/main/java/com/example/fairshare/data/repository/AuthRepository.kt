@@ -1,14 +1,15 @@
-package com.example.fairshare.domain.repository
+package com.example.fairshare.data.repository
 
-import com.example.fairshare.data.remote.AuthRequest
+import com.example.fairshare.data.remote.AuthApi
 import com.example.fairshare.data.remote.NetworkModule
+import com.example.fairshare.data.remote.models.AuthRequest
 import com.google.gson.Gson
 import retrofit2.HttpException
 import retrofit2.Response
 import java.io.IOException
 
 class AuthRepository(
-    private val api: com.example.fairshare.data.remote.AuthApi = NetworkModule.authApi,
+    private val api: AuthApi = NetworkModule.authApi,
     private val gson: Gson = Gson()
 ) {
 
