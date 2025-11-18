@@ -15,6 +15,7 @@ import com.example.fairshare.ui.screens.GroupsListScreen
 import com.example.fairshare.ui.screens.HomePageScreen
 import com.example.fairshare.ui.viewmodels.GroupsListViewModel
 import com.example.fairshare.ui.viewmodels.GroupsState
+import com.example.fairshare.ui.viewmodels.GroupDetailViewModel
 
 @Composable
 fun AppNav() {
@@ -41,24 +42,33 @@ fun AppNav() {
             arguments = listOf(navArgument("groupId") { type = NavType.StringType })
         ) { backStackEntry ->
             val groupId = backStackEntry.arguments?.getString("groupId") ?: return@composable
-            val state by vm.state.collectAsState()
+            val groupsVm: GroupsListViewModel = viewModel()
+            val detailVm: GroupDetailViewModel = viewModel()
 
-            // Trigger loading once when entering the screen
+            val groupsState by groupsVm.state.collectAsState()
+            val expensesState by detailVm.state.collectAsState()
+
             LaunchedEffect(groupId) {
-                vm.loadGroupById(groupId)
+                groupsVm.loadGroupById(groupId)
+                detailVm.loadExpenses(groupId)
             }
 
-            when (state) {
+            when (groupsState) {
                 is GroupsState.Success -> {
-                    val group = (state as GroupsState.Success).groups.firstOrNull()
+                    val group = (groupsState as GroupsState.Success).groups.firstOrNull()
                     GroupDetailScreen(
                         group = group,
+                        expensesState = expensesState,
+                        onAddExpense = { description, amount ->
+                            detailVm.addExpense(groupId, description, amount)
+                        },
                         onBack = { nav.popBackStack() }
                     )
                 }
                 else -> Unit
             }
         }
+
 
     }
 }

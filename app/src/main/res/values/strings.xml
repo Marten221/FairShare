@@ -46,4 +46,15 @@
     <string name="group_id_label">Group ID: %1$s</string>
     <string name="expenses_title">Expenses</string>
     <string name="expenses_empty">No expenses yet.</string>
+
+    <!-- Expenses -->
+    <string name="add_expense">Add expense</string>
+    <string name="add_expense_title">Add expense</string>
+    <string name="add_expense_description_label">Description</string>
+    <string name="add_expense_amount_label">Amount</string>
+    <string name="add_expense_cta">Add</string>
+    <string name="expenses_loading">Loading expenses…</string>
+    <string name="expenses_error">Failed to load expenses.</string>
+    <string name="expense_owner_label">Added by %1$s</string>
+
 </resources>

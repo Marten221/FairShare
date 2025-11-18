@@ -68,4 +68,13 @@ object NetworkModule {
             .build()
             .create(GroupsApi::class.java)
     }
+
+    val expensesApi: ExpenseApi by lazy {
+        Retrofit.Builder()
+            .baseUrl(BASE_URL)
+            .addConverterFactory(GsonConverterFactory.create())
+            .client(client)
+            .build()
+            .create(ExpenseApi::class.java)
+    }
 }
