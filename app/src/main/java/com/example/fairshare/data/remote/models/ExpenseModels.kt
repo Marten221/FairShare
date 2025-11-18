@@ -5,6 +5,7 @@ data class ExpenseResponse(
     val id: String,
     val description: String,
     val amount: Double,
+    val timestamp: String,
     val owner: User
 )
 

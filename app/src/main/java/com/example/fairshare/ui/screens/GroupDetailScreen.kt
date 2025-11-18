@@ -189,10 +189,21 @@ private fun ExpensesList(expenses: List<Expense>) {
                     style = MaterialTheme.typography.bodyLarge
                 )
                 Spacer(Modifier.height(dimensionResource(R.dimen.spacing_xs)))
-                Text(
-                    text = "€${"%.2f".format(expense.amount)}",
-                    style = MaterialTheme.typography.bodyMedium
-                )
+
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Text(
+                        text = "€${"%.2f".format(expense.amount)}",
+                        style = MaterialTheme.typography.bodyMedium
+                    )
+                    Text(
+                        text = expense.date,
+                        style = MaterialTheme.typography.bodySmall
+                    )
+                }
+
                 Text(
                     text = stringResource(R.string.expense_owner_label, expense.ownerEmail),
                     style = MaterialTheme.typography.bodySmall
