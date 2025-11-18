@@ -1,5 +1,6 @@
 package com.example.fairshare.ui.screens
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -15,6 +16,7 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.DividerDefaults
+import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -37,19 +39,27 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.sp
 import com.example.fairshare.R
+import com.example.fairshare.domain.model.Debt
 import com.example.fairshare.domain.model.Expense
 import com.example.fairshare.domain.model.Group
+import com.example.fairshare.domain.model.UserDebts
+import com.example.fairshare.ui.viewmodels.BalanceState
+import com.example.fairshare.ui.viewmodels.DebtsState
 import com.example.fairshare.ui.viewmodels.ExpensesState
+import kotlin.math.abs
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun GroupDetailScreen(
     group: Group?,
     expensesState: ExpensesState,
+    balanceState: BalanceState,
+    debtsState: DebtsState,
     onAddExpense: (description: String, amount: Double) -> Unit,
     onBack: () -> Unit
 ) {
     var showAddExpenseDialog by rememberSaveable { mutableStateOf(false) }
+    var showDebtsDialog by rememberSaveable { mutableStateOf(false) }
 
     Scaffold(
         topBar = {
@@ -113,6 +123,11 @@ fun GroupDetailScreen(
                 fontSize = dimensionResource(R.dimen.id_text).value.sp,
             )
 
+            BalanceSummary(
+                balanceState = balanceState,
+                onClick = { showDebtsDialog = true }
+            )
+
             Spacer(Modifier.height(dimensionResource(R.dimen.spacing_md)))
             HorizontalDivider(Modifier, DividerDefaults.Thickness, DividerDefaults.color)
 
@@ -169,6 +184,151 @@ fun GroupDetailScreen(
                 showAddExpenseDialog = false
             }
         )
+    }
+
+    if (showDebtsDialog) {
+        DebtsDialog(
+            debtsState = debtsState,
+            onDismiss = { showDebtsDialog = false }
+        )
+    }
+}
+
+@Composable
+private fun BalanceSummary(
+    balanceState: BalanceState,
+    onClick: () -> Unit
+) {
+    when (val s = balanceState) {
+        is BalanceState.Idle,
+        is BalanceState.Loading -> {
+            Text(
+                text = "Calculating your balance...",
+                style = MaterialTheme.typography.bodyMedium
+            )
+        }
+
+        is BalanceState.Error -> {
+            Text(
+                text = "Failed to load balance: ${s.message}",
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.error
+            )
+        }
+
+        is BalanceState.Success -> {
+            val net = s.balance.net
+            val absNet = abs(net)
+            val mainText = when {
+                net > 0.01 -> "You are owed €${"%.2f".format(absNet)} in this group"
+                net < -0.01 -> "You owe €${"%.2f".format(absNet)} in this group"
+                else -> "You are settled up in this group"
+            }
+
+            val subText = if (absNet > 0.01) {
+                "Tap to see who you owe and who owes you"
+            } else {
+                "No outstanding balances with other members"
+            }
+
+            ElevatedCard(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clickable(enabled = absNet > 0.01) { onClick() }
+            ) {
+                Column(
+                    modifier = Modifier.padding(dimensionResource(R.dimen.spacing_md)),
+                    verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.spacing_xs))
+                ) {
+                    Text(
+                        text = "Your balance",
+                        style = MaterialTheme.typography.titleMedium
+                    )
+                    Text(
+                        text = mainText,
+                        style = MaterialTheme.typography.bodyMedium
+                    )
+                    Text(
+                        text = subText,
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun DebtsDialog(
+    debtsState: DebtsState,
+    onDismiss: () -> Unit
+) {
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text("Who owes who") },
+        text = {
+            when (val s = debtsState) {
+                is DebtsState.Idle,
+                is DebtsState.Loading -> {
+                    Text("Loading details…")
+                }
+
+                is DebtsState.Error -> {
+                    Text("Failed to load debts: ${s.message}")
+                }
+
+                is DebtsState.Success -> {
+                    DebtsDialogBody(debts = s.debts)
+                }
+            }
+        },
+        confirmButton = {
+            TextButton(onClick = onDismiss) {
+                Text("Close")
+            }
+        }
+    )
+}
+
+@Composable
+private fun DebtsDialogBody(debts: UserDebts) {
+    Column(
+        verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.spacing_sm))
+    ) {
+        if (debts.owe.isNotEmpty()) {
+            Text(
+                text = "You owe",
+                style = MaterialTheme.typography.titleSmall
+            )
+            debts.owe.forEach { d: Debt ->
+                Text(
+                    text = "• ${d.toUserName}: €${"%.2f".format(d.amount)}",
+                    style = MaterialTheme.typography.bodyMedium
+                )
+            }
+        }
+
+        if (debts.owed.isNotEmpty()) {
+            Spacer(Modifier.height(dimensionResource(R.dimen.spacing_sm)))
+            Text(
+                text = "Owe you",
+                style = MaterialTheme.typography.titleSmall
+            )
+            debts.owed.forEach { d: Debt ->
+                Text(
+                    text = "• ${d.fromUserName}: €${"%.2f".format(d.amount)}",
+                    style = MaterialTheme.typography.bodyMedium
+                )
+            }
+        }
+
+        if (debts.owe.isEmpty() && debts.owed.isEmpty()) {
+            Text(
+                text = "You have no outstanding balances with anyone in this group.",
+                style = MaterialTheme.typography.bodyMedium
+            )
+        }
     }
 }
 

@@ -47,10 +47,13 @@ fun AppNav() {
 
             val groupsState by groupsVm.state.collectAsState()
             val expensesState by detailVm.state.collectAsState()
+            val balanceState by detailVm.balanceState.collectAsState()
+            val debtsState by detailVm.debtsState.collectAsState()
 
             LaunchedEffect(groupId) {
                 groupsVm.loadGroupById(groupId)
                 detailVm.loadExpenses(groupId)
+                detailVm.loadBalanceAndDebts(groupId)
             }
 
             when (groupsState) {
@@ -59,6 +62,8 @@ fun AppNav() {
                     GroupDetailScreen(
                         group = group,
                         expensesState = expensesState,
+                        balanceState = balanceState,
+                        debtsState = debtsState,
                         onAddExpense = { description, amount ->
                             detailVm.addExpense(groupId, description, amount)
                         },
