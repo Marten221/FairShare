@@ -4,13 +4,15 @@ import com.example.fairshare.data.remote.GroupsApi
 import com.example.fairshare.data.remote.NetworkModule
 import com.example.fairshare.data.remote.models.GroupRequest
 import com.example.fairshare.domain.model.Group
+import com.example.fairshare.domain.repository.GroupsRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
-class GroupsRepository(
+class GroupsRepositoryImpl(
     private val api: GroupsApi = NetworkModule.groupsApi
-) {
-    suspend fun addGroup(name: String): Result<Group> = withContext(Dispatchers.IO) {
+) : GroupsRepository {
+
+    override suspend fun addGroup(name: String): Result<Group> = withContext(Dispatchers.IO) {
         try {
             val response = api.createGroup(GroupRequest(name))
             if (response.isSuccessful && response.body() != null) {
@@ -24,12 +26,11 @@ class GroupsRepository(
         }
     }
 
-    suspend fun getAllGroups(): Result<List<Group>> = withContext(Dispatchers.IO) {
+    override suspend fun getAllGroups(): Result<List<Group>> = withContext(Dispatchers.IO) {
         try {
             val response = api.getGroups()
             if (response.isSuccessful && response.body() != null) {
                 val groups = response.body()!!.map {
-                    // +1 to memberCount, because the owner is also a member.
                     Group(it.id, it.name, it.members.size + 1)
                 }
                 Result.success(groups)
@@ -41,7 +42,7 @@ class GroupsRepository(
         }
     }
 
-    suspend fun getGroupById(groupId: String): Result<Group> = withContext(Dispatchers.IO) {
+    override suspend fun getGroupById(groupId: String): Result<Group> = withContext(Dispatchers.IO) {
         try {
             val response = api.getGroupById(groupId)
             if (response.isSuccessful && response.body() != null) {
@@ -55,8 +56,7 @@ class GroupsRepository(
         }
     }
 
-
-    suspend fun joinGroup(groupId: String): Result<Unit> =
+    override suspend fun joinGroup(groupId: String): Result<Unit> =
         withContext(Dispatchers.IO) {
             try {
                 val response = api.joinGroup(groupId)

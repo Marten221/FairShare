@@ -2,8 +2,9 @@ package com.example.fairshare.ui.viewmodels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.fairshare.data.repository.GroupsRepository
+import com.example.fairshare.data.repository.GroupsRepositoryImpl
 import com.example.fairshare.domain.model.Group
+import com.example.fairshare.domain.repository.GroupsRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -18,8 +19,9 @@ sealed class GroupsState {
 }
 
 class GroupsListViewModel(
-    private val repo: GroupsRepository = GroupsRepository()
+    private val repo: GroupsRepository = GroupsRepositoryImpl()
 ) : ViewModel() {
+
     private val _state = MutableStateFlow<GroupsState>(GroupsState.Idle)
     val state: StateFlow<GroupsState> = _state
 

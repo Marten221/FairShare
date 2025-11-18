@@ -3,22 +3,22 @@ package com.example.fairshare.data.repository
 import com.example.fairshare.data.remote.AuthApi
 import com.example.fairshare.data.remote.NetworkModule
 import com.example.fairshare.data.remote.models.AuthRequest
+import com.example.fairshare.domain.repository.AuthRepository
 import com.google.gson.Gson
 import retrofit2.HttpException
 import retrofit2.Response
 import java.io.IOException
 
-class AuthRepository(
+class AuthRepositoryImpl(
     private val api: AuthApi = NetworkModule.authApi,
     private val gson: Gson = Gson()
-) {
+) : AuthRepository {
 
-    suspend fun login(email: String, password: String): Result<String> =
+    override suspend fun login(email: String, password: String): Result<String> =
         call { api.login(AuthRequest(email, password)) }
 
-    suspend fun register(email: String, password: String): Result<String> =
+    override suspend fun register(email: String, password: String): Result<String> =
         call { api.register(AuthRequest(email, password)) }
-
 
     private suspend fun call(block: suspend () -> Response<String>): Result<String> =
         try {
@@ -29,7 +29,6 @@ class AuthRepository(
                 Result.failure(Exception(humanize(resp)))
             }
         } catch (e: IOException) {
-            // No internet / timeout / DNS
             Result.failure(Exception("No internet connection or timeout. Please try again."))
         } catch (e: HttpException) {
             Result.failure(Exception("Server unreachable. Please try again later."))
@@ -38,10 +37,8 @@ class AuthRepository(
         }
 
     private fun humanize(resp: Response<*>): String {
-        // 401 — wrong creds
         if (resp.code() == 401) return "Incorrect email or password"
 
-        // Try to use server message if present: {"message":"..."}
         val raw = resp.errorBody()?.string().orEmpty()
         val msg = try { gson.fromJson(raw, ApiError::class.java)?.message } catch (_: Exception) { null }
         return msg?.takeIf { it.isNotBlank() }

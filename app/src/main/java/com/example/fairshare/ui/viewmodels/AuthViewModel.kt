@@ -2,7 +2,8 @@ package com.example.fairshare.ui.viewmodels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.fairshare.data.repository.AuthRepository
+import com.example.fairshare.data.repository.AuthRepositoryImpl
+import com.example.fairshare.domain.repository.AuthRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -15,7 +16,7 @@ sealed class AuthState {
 }
 
 class AuthViewModel(
-    private val repo: AuthRepository = AuthRepository()
+    private val repo: AuthRepository = AuthRepositoryImpl()
 ) : ViewModel() {
 
     private val _state = MutableStateFlow<AuthState>(AuthState.Idle)
