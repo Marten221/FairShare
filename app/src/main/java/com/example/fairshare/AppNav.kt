@@ -13,12 +13,15 @@ import androidx.navigation.navArgument
 import com.example.fairshare.ui.screens.GroupDetailScreen
 import com.example.fairshare.ui.screens.GroupsListScreen
 import com.example.fairshare.ui.screens.HomePageScreen
+import com.example.fairshare.ui.viewmodels.GroupDetailViewModel
 import com.example.fairshare.ui.viewmodels.GroupsListViewModel
 import com.example.fairshare.ui.viewmodels.GroupsState
-import com.example.fairshare.ui.viewmodels.GroupDetailViewModel
 
 @Composable
-fun AppNav() {
+fun AppNav(
+    isDarkTheme: Boolean,
+    onToggleTheme: () -> Unit
+) {
     val nav = rememberNavController()
     val vm: GroupsListViewModel = viewModel()
 
@@ -27,7 +30,9 @@ fun AppNav() {
             HomePageScreen(
                 onSignInSuccess = {
                     nav.navigate("groups")
-                }
+                },
+                isDarkTheme = isDarkTheme,
+                onToggleTheme = onToggleTheme
             )
         }
         composable("groups") {

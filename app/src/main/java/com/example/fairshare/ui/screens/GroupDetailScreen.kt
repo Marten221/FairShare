@@ -368,6 +368,8 @@ private fun ExpensesList(expenses: List<Expense>) {
                     text = stringResource(R.string.expense_owner_label, expense.ownerEmail),
                     style = MaterialTheme.typography.bodySmall
                 )
+                Spacer(Modifier.height(dimensionResource(R.dimen.spacing_sm)))
+                HorizontalDivider(Modifier, DividerDefaults.Thickness, DividerDefaults.color)
             }
         }
     }

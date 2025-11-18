@@ -40,7 +40,9 @@ import com.example.fairshare.ui.viewmodels.AuthViewModel
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomePageScreen(
-    onSignInSuccess: () -> Unit
+    onSignInSuccess: () -> Unit,
+    isDarkTheme: Boolean,
+    onToggleTheme: () -> Unit
 ) {
     val vm: AuthViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
     val state by vm.state.collectAsState()
@@ -98,6 +100,15 @@ fun HomePageScreen(
                 Text(
                     text = stringResource(R.string.home_sign_up),
                     fontSize = dimensionResource(R.dimen.button_text).value.sp
+                )
+            }
+            TextButton(
+                onClick = onToggleTheme,
+                modifier = Modifier.padding(top = dimensionResource(R.dimen.spacing_l).value.dp)
+            ) {
+                Text(
+                    text = if (isDarkTheme) "Switch to light mode" else "Switch to dark mode",
+                    fontSize = 14.sp
                 )
             }
         }
