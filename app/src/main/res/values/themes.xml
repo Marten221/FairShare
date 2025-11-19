@@ -1,5 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
+    <style name="Theme.Fairshare.Splash" parent="Theme.SplashScreen">
+        <!-- Background color of the splash screen -->
+        <item name="windowSplashScreenBackground">@color/ic_fairshare_background</item>
+        <!-- Icon or logo shown in the center -->
+        <item name="windowSplashScreenAnimatedIcon">@mipmap/ic_fairshare</item>
+        <!-- After splash finishes, use your real app theme -->
+        <item name="postSplashScreenTheme">@style/Theme.Fairshare</item>
+    </style>
     <style name="Theme.Fairshare" parent="android:Theme.Material.Light.NoActionBar" />
 </resources>
