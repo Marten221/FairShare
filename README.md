@@ -84,8 +84,6 @@ The project uses the following key dependencies:
 
 ## Usage Guide
 
-> **Note**: This section is a placeholder. Please add screenshots, demo GIFs, or detailed usage instructions here.
-
 ### Getting Started
 
 1. Launch the app
