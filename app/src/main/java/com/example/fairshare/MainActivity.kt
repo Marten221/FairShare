@@ -9,6 +9,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import com.example.fairshare.ui.theme.FairshareTheme
 
 /**
@@ -32,6 +33,8 @@ class MainActivity : ComponentActivity() {
      *                           or null if this is a fresh start.
      */
     override fun onCreate(savedInstanceState: Bundle?) {
+        installSplashScreen()
+
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {

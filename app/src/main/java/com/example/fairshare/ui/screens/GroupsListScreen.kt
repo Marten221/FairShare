@@ -15,6 +15,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.GroupAdd
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ElevatedCard
@@ -97,7 +98,7 @@ fun GroupsListScreen(
                         .padding(start = dimensionResource(R.dimen.spacing_l))
                 ) {
                     Icon(
-                        imageVector = Icons.Default.Add,
+                        imageVector = Icons.Default.GroupAdd,
                         contentDescription = stringResource(R.string.join_group_fab_content_desc)
                     )
                 }
