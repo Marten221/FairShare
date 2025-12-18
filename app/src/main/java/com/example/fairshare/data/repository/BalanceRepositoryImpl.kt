@@ -9,10 +9,29 @@ import com.example.fairshare.domain.repository.BalanceRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
+/**
+ * Default implementation of [BalanceRepository] using Retrofit [BalanceApi].
+ *
+ * Maps API response models to domain models and executes network calls
+ * on the IO dispatcher for proper threading.
+ *
+ * @property api Retrofit API interface for balance endpoints.
+ *               Defaults to [NetworkModule.balanceApi].
+ */
 class BalanceRepositoryImpl(
     private val api: BalanceApi = NetworkModule.balanceApi
 ) : BalanceRepository {
 
+    /**
+     * Retrieves the current user's balance summary for a specific group.
+     *
+     * Executes the network call on [Dispatchers.IO] and maps the API response
+     * to the domain [UserBalance] model.
+     *
+     * @param groupId Unique identifier of the group to get balance for.
+     * @return [Result.success] containing [UserBalance] with balance details,
+     *         or [Result.failure] with an exception describing the error.
+     */
     override suspend fun getUserBalance(groupId: String): Result<UserBalance> =
         withContext(Dispatchers.IO) {
             try {
@@ -36,6 +55,16 @@ class BalanceRepositoryImpl(
             }
         }
 
+    /**
+     * Retrieves detailed debt information for the current user in a specific group.
+     *
+     * Executes the network call on [Dispatchers.IO] and maps the API response
+     * to the domain [UserDebts] model with nested [Debt] lists.
+     *
+     * @param groupId Unique identifier of the group to get debts for.
+     * @return [Result.success] containing [UserDebts] with detailed debt breakdowns,
+     *         or [Result.failure] with an exception describing the error.
+     */
     override suspend fun getUserDebts(groupId: String): Result<UserDebts> =
         withContext(Dispatchers.IO) {
             try {

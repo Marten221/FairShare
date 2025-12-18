@@ -48,6 +48,21 @@ import com.example.fairshare.ui.viewmodels.DebtsState
 import com.example.fairshare.ui.viewmodels.ExpensesState
 import kotlin.math.abs
 
+/**
+ * Detail screen for a specific expense sharing group.
+ *
+ * Displays the group's information including member count, group ID for sharing,
+ * user's balance summary, and a list of all expenses. Provides functionality
+ * to add new expenses and view detailed debt breakdowns.
+ *
+ * @param group The group to display, or null if not yet loaded.
+ * @param expensesState Current state of the expenses list loading.
+ * @param balanceState Current state of the user's balance loading.
+ * @param debtsState Current state of the detailed debts loading.
+ * @param onAddExpense Callback invoked when the user submits a new expense
+ *                     with description and amount.
+ * @param onBack Callback invoked when the user navigates back.
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun GroupDetailScreen(
@@ -194,6 +209,16 @@ fun GroupDetailScreen(
     }
 }
 
+/**
+ * Card component displaying the user's balance summary in the group.
+ *
+ * Shows whether the user is owed money, owes money, or is settled up.
+ * Clickable when there are outstanding balances to show detailed debt breakdown.
+ *
+ * @param balanceState Current state of the balance loading.
+ * @param onClick Callback invoked when the card is clicked (only enabled when
+ *                there are outstanding balances).
+ */
 @Composable
 private fun BalanceSummary(
     balanceState: BalanceState,
@@ -259,6 +284,14 @@ private fun BalanceSummary(
     }
 }
 
+/**
+ * Dialog displaying detailed debt breakdown for the current user.
+ *
+ * Shows two sections: debts the user owes to others and debts others owe to the user.
+ *
+ * @param debtsState Current state of the debts loading.
+ * @param onDismiss Callback invoked when the dialog is dismissed.
+ */
 @Composable
 private fun DebtsDialog(
     debtsState: DebtsState,
@@ -291,6 +324,11 @@ private fun DebtsDialog(
     )
 }
 
+/**
+ * Content body for the debts dialog showing categorized debt lists.
+ *
+ * @param debts The user's debt information to display.
+ */
 @Composable
 private fun DebtsDialogBody(debts: UserDebts) {
     Column(
@@ -332,6 +370,13 @@ private fun DebtsDialogBody(debts: UserDebts) {
     }
 }
 
+/**
+ * Scrollable list displaying all expenses in the group.
+ *
+ * Each expense shows description, amount, date, and who paid.
+ *
+ * @param expenses List of expenses to display.
+ */
 @Composable
 private fun ExpensesList(expenses: List<Expense>) {
     LazyColumn(
@@ -375,6 +420,15 @@ private fun ExpensesList(expenses: List<Expense>) {
     }
 }
 
+/**
+ * Dialog for adding a new expense to the group.
+ *
+ * Provides input fields for expense description and amount with validation.
+ *
+ * @param onDismiss Callback invoked when the dialog is dismissed without submitting.
+ * @param onSubmit Callback invoked with the expense description and amount
+ *                 when the user confirms.
+ */
 @Composable
 private fun AddExpenseDialog(
     onDismiss: () -> Unit,

@@ -12,27 +12,59 @@ import kotlinx.coroutines.withContext
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
+/**
+ * Default implementation of [ExpenseRepository] using Retrofit [ExpenseApi].
+ *
+ * Handles expense creation and retrieval, including date formatting for display.
+ *
+ * @property api Retrofit API interface for expense endpoints.
+ *               Defaults to [NetworkModule.expensesApi].
+ */
 class ExpenseRepositoryImpl(
     private val api: ExpenseApi = NetworkModule.expensesApi
 ) : ExpenseRepository {
 
     companion object {
+        /**
+         * Date formatter for converting timestamps to display format (dd.MM.yyyy).
+         */
         @RequiresApi(Build.VERSION_CODES.O)
         private val DATE_FORMATTER: DateTimeFormatter =
             DateTimeFormatter.ofPattern("dd.MM.yyyy")
     }
 
+    /**
+     * Converts an ISO timestamp string to a human-readable date format.
+     *
+     * Parses timestamps in the format "2025-11-19T13:45:12" and outputs "19.11.2025".
+     * Falls back to the date portion before 'T' if parsing fails.
+     *
+     * @receiver The ISO 8601 timestamp string to convert.
+     * @return Formatted date string in dd.MM.yyyy format, or the date portion on parse failure.
+     */
     @RequiresApi(Build.VERSION_CODES.O)
     private fun String.toDisplayDate(): String =
         try {
-            LocalDateTime.parse(this)          // parses "2025-11-19T13:45:12"
+            LocalDateTime.parse(this)
                 .toLocalDate()
-                .format(DATE_FORMATTER)       // "19.11.2025"
+                .format(DATE_FORMATTER)
         } catch (e: Exception) {
-            // Fallback: just show the date part if parse fails
+            // Fallback: return the date part before 'T' if parsing fails
             this.substringBefore('T')
         }
 
+    /**
+     * Creates a new expense in the specified group.
+     *
+     * Executes the network call on [Dispatchers.IO] and maps the API response
+     * to the domain [Expense] model with formatted date.
+     *
+     * @param groupId Unique identifier of the group to add the expense to.
+     * @param description User provided description of the expense.
+     * @param amount Total expense amount to be split among group members.
+     * @return [Result.success] containing the created [Expense] with server assigned ID,
+     *         or [Result.failure] with an exception describing the error.
+     */
     @RequiresApi(Build.VERSION_CODES.O)
     override suspend fun createExpense(
         groupId: String,
@@ -64,6 +96,16 @@ class ExpenseRepositoryImpl(
         }
     }
 
+    /**
+     * Retrieves all expenses for a specific group.
+     *
+     * Executes the network call on [Dispatchers.IO] and maps each API response
+     * to domain [Expense] models with formatted dates.
+     *
+     * @param groupId Unique identifier of the group to get expenses for.
+     * @return [Result.success] containing a list of [Expense] objects,
+     *         or [Result.failure] with an exception describing the error.
+     */
     @RequiresApi(Build.VERSION_CODES.O)
     override suspend fun getGroupExpenses(groupId: String): Result<List<Expense>> =
         withContext(Dispatchers.IO) {

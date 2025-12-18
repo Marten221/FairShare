@@ -17,6 +17,18 @@ import com.example.fairshare.ui.viewmodels.GroupDetailViewModel
 import com.example.fairshare.ui.viewmodels.GroupsListViewModel
 import com.example.fairshare.ui.viewmodels.GroupsState
 
+/**
+ * Root navigation composable for the FairShare application.
+ *
+ * Defines the navigation graph with the following destinations:
+ * - "home": Landing page with sign-in/sign-up options
+ * - "groups": List of user's expense groups
+ * - "group/{groupId}": Detail view for a specific group showing expenses and balances
+ *
+ * @param isDarkTheme Current theme state indicating whether dark mode is enabled.
+ * @param onToggleTheme Callback invoked when the user requests to toggle between
+ *                      light and dark themes.
+ */
 @Composable
 fun AppNav(
     isDarkTheme: Boolean,
@@ -78,7 +90,5 @@ fun AppNav(
                 else -> Unit
             }
         }
-
-
     }
 }

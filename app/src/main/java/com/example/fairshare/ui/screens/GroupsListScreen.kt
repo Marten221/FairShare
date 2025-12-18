@@ -44,6 +44,17 @@ import com.example.fairshare.R
 import com.example.fairshare.ui.viewmodels.GroupsListViewModel
 import com.example.fairshare.ui.viewmodels.GroupsState
 
+/**
+ * Screen displaying the list of expense sharing groups the user belongs to.
+ *
+ * Shows all groups with their names and member counts.
+ *
+ * Automatically loads the groups list when the screen is displayed.
+ *
+ * @param viewModel ViewModel managing the groups list state and operations.
+ * @param onBack Callback invoked when the user navigates back.
+ * @param onGroupClick Callback invoked with the group ID when a group is clicked.
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun GroupsListScreen(
@@ -78,7 +89,7 @@ fun GroupsListScreen(
                     .navigationBarsPadding()
                     .padding(bottom = dimensionResource(R.dimen.spacing_l), start = dimensionResource(R.dimen.spacing_xl))
             ) {
-                // LEFT: Join Group
+                // LEFT: Join Group FAB
                 FloatingActionButton(
                     onClick = { showJoinDialog = true },
                     modifier = Modifier
@@ -167,12 +178,11 @@ fun GroupsListScreen(
     if (showAddGroupDialog) {
         AddGroupDialog(
             onDismiss = { showAddGroupDialog = false },
-            onSubmit = {name ->
+            onSubmit = { name ->
                 viewModel.addGroup(name = name)
                 showAddGroupDialog = false
             }
         )
-
     }
     if (showJoinDialog) {
         JoinGroupDialog(
@@ -185,6 +195,14 @@ fun GroupsListScreen(
     }
 }
 
+/**
+ * Dialog for creating a new expense sharing group.
+ *
+ * Provides an input field for the group name with validation.
+ *
+ * @param onDismiss Callback invoked when the dialog is dismissed without creating.
+ * @param onSubmit Callback invoked with the group name when the user confirms.
+ */
 @Composable
 private fun AddGroupDialog(
     onDismiss: () -> Unit,
@@ -220,6 +238,14 @@ private fun AddGroupDialog(
     )
 }
 
+/**
+ * Dialog for joining an existing group using its ID.
+ *
+ * Provides an input field for the group ID with validation.
+ *
+ * @param onDismiss Callback invoked when the dialog is dismissed without joining.
+ * @param onSubmit Callback invoked with the group ID when the user confirms.
+ */
 @Composable
 private fun JoinGroupDialog(
     onDismiss: () -> Unit,

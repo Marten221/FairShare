@@ -37,6 +37,19 @@ import com.example.fairshare.R
 import com.example.fairshare.ui.viewmodels.AuthState
 import com.example.fairshare.ui.viewmodels.AuthViewModel
 
+/**
+ * Landing screen for the FairShare application.
+ *
+ * Provides sign-in and sign-up options for users. Displays the app title
+ * and theme toggle button. Handles authentication state changes and
+ * navigates to the groups screen on successful authentication.
+ *
+ * @param onSignInSuccess Callback invoked when authentication succeeds,
+ *                        typically used to navigate to the groups screen.
+ * @param isDarkTheme Current theme state indicating whether dark mode is enabled.
+ * @param onToggleTheme Callback invoked when the user requests to toggle
+ *                      between light and dark themes.
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomePageScreen(
@@ -51,13 +64,14 @@ fun HomePageScreen(
     var showSignUp by rememberSaveable { mutableStateOf(false) }
     var errorMsg by rememberSaveable { mutableStateOf<String?>(null) }
 
+    // Handle authentication state changes
     LaunchedEffect(state) {
         when (state) {
             is AuthState.Success -> {
                 showSignIn = false
                 showSignUp = false
                 vm.reset()
-                onSignInSuccess() // navigates to "groups"
+                onSignInSuccess()
             }
             is AuthState.Error -> {
                 errorMsg = (state as AuthState.Error).message
@@ -142,6 +156,15 @@ fun HomePageScreen(
     }
 }
 
+/**
+ * Dialog for signing in with existing credentials.
+ *
+ * Provides email and password input fields with validation.
+ * Email is validated against Android's email pattern matcher.
+ *
+ * @param onDismiss Callback invoked when the dialog is dismissed without signing in.
+ * @param onSubmit Callback invoked with email and password when the user confirms.
+ */
 @Composable
 private fun SignInDialog(
     onDismiss: () -> Unit,
@@ -205,6 +228,15 @@ private fun SignInDialog(
     )
 }
 
+/**
+ * Dialog for registering a new user account.
+ *
+ * Provides email and password input fields with validation.
+ * Email is validated against Android's email pattern matcher.
+ *
+ * @param onDismiss Callback invoked when the dialog is dismissed without registering.
+ * @param onSubmit Callback invoked with email and password when the user confirms.
+ */
 @Composable
 private fun SignUpDialog(
     onDismiss: () -> Unit,
