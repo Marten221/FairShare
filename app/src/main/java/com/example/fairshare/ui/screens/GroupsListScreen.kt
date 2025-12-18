@@ -61,7 +61,7 @@ import com.example.fairshare.ui.viewmodels.GroupsState
 fun GroupsListScreen(
     viewModel: GroupsListViewModel,
     onBack: () -> Unit,
-    onGroupClick: (String) -> Unit
+    onGroupClick: (String) -> Unit,
 ) {
     var showAddGroupDialog by rememberSaveable { mutableStateOf(false) }
     var showJoinDialog by rememberSaveable { mutableStateOf(false) }
@@ -80,51 +80,56 @@ fun GroupsListScreen(
                     IconButton(onClick = onBack) {
                         Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
                     }
-                }
+                },
             )
         },
         floatingActionButton = {
             Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .navigationBarsPadding()
-                    .padding(bottom = dimensionResource(R.dimen.spacing_l), start = dimensionResource(R.dimen.spacing_xl))
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .navigationBarsPadding()
+                        .padding(bottom = dimensionResource(R.dimen.spacing_l), start = dimensionResource(R.dimen.spacing_xl)),
             ) {
                 // LEFT: Join Group FAB
                 FloatingActionButton(
                     onClick = { showJoinDialog = true },
-                    modifier = Modifier
-                        .align(Alignment.BottomStart)
-                        .padding(start = dimensionResource(R.dimen.spacing_l))
+                    modifier =
+                        Modifier
+                            .align(Alignment.BottomStart)
+                            .padding(start = dimensionResource(R.dimen.spacing_l)),
                 ) {
                     Icon(
                         imageVector = Icons.Default.GroupAdd,
-                        contentDescription = stringResource(R.string.join_group_fab_content_desc)
+                        contentDescription = stringResource(R.string.join_group_fab_content_desc),
                     )
                 }
                 // RIGHT: Create Group
                 FloatingActionButton(
                     onClick = { showAddGroupDialog = true },
-                    modifier = Modifier
-                        .align(Alignment.BottomEnd)
-                        .padding(end = dimensionResource(R.dimen.spacing_l))
+                    modifier =
+                        Modifier
+                            .align(Alignment.BottomEnd)
+                            .padding(end = dimensionResource(R.dimen.spacing_l)),
                 ) {
                     Icon(
                         Icons.Default.Add,
-                        contentDescription = stringResource(R.string.groups_fab_content_desc)
+                        contentDescription = stringResource(R.string.groups_fab_content_desc),
                     )
                 }
             }
-        }
+        },
     ) { padding ->
         Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(padding)
+            modifier =
+                Modifier
+                    .fillMaxSize()
+                    .padding(padding),
         ) {
             when (val s = state) {
                 is GroupsState.Idle,
-                is GroupsState.Loading -> {
+                is GroupsState.Loading,
+                -> {
                     CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
                 }
 
@@ -132,17 +137,18 @@ fun GroupsListScreen(
                     Text(
                         text = "Failed to load groups: ${s.message}",
                         modifier = Modifier.align(Alignment.Center),
-                        color = MaterialTheme.colorScheme.error
+                        color = MaterialTheme.colorScheme.error,
                     )
                 }
 
                 is GroupsState.Success -> {
                     val groups = s.groups
                     LazyColumn(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(dimensionResource(R.dimen.spacing_l)),
-                        verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.spacing_sm))
+                        modifier =
+                            Modifier
+                                .fillMaxSize()
+                                .padding(dimensionResource(R.dimen.spacing_l)),
+                        verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.spacing_sm)),
                     ) {
                         if (groups.isEmpty()) {
                             item {
@@ -150,22 +156,23 @@ fun GroupsListScreen(
                                     text = stringResource(R.string.groups_empty),
                                     style = MaterialTheme.typography.bodyLarge,
                                     color = MaterialTheme.colorScheme.onSurfaceVariant,
-                                    modifier = Modifier.padding(dimensionResource(R.dimen.spacing_l))
+                                    modifier = Modifier.padding(dimensionResource(R.dimen.spacing_l)),
                                 )
                             }
                         } else {
                             items(groups) { g ->
                                 ElevatedCard(
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .clickable { onGroupClick(g.id) }
+                                    modifier =
+                                        Modifier
+                                            .fillMaxWidth()
+                                            .clickable { onGroupClick(g.id) },
                                 ) {
                                     Column(Modifier.padding(dimensionResource(R.dimen.spacing_l))) {
                                         Text(g.name, style = MaterialTheme.typography.titleMedium)
                                         Spacer(Modifier.height(dimensionResource(R.dimen.spacing_xs)))
                                         Text(
                                             pluralStringResource(R.plurals.members_count, g.memberCount, g.memberCount),
-                                            style = MaterialTheme.typography.bodyMedium
+                                            style = MaterialTheme.typography.bodyMedium,
                                         )
                                     }
                                 }
@@ -182,7 +189,7 @@ fun GroupsListScreen(
             onSubmit = { name ->
                 viewModel.addGroup(name = name)
                 showAddGroupDialog = false
-            }
+            },
         )
     }
     if (showJoinDialog) {
@@ -191,7 +198,7 @@ fun GroupsListScreen(
             onSubmit = { groupId ->
                 viewModel.joinGroup(groupId)
                 showJoinDialog = false
-            }
+            },
         )
     }
 }
@@ -207,7 +214,7 @@ fun GroupsListScreen(
 @Composable
 private fun AddGroupDialog(
     onDismiss: () -> Unit,
-    onSubmit: (name: String) -> Unit
+    onSubmit: (name: String) -> Unit,
 ) {
     var name by rememberSaveable { mutableStateOf("") }
 
@@ -221,21 +228,21 @@ private fun AddGroupDialog(
                     onValueChange = { name = it },
                     label = { Text(stringResource(R.string.create_group_label)) },
                     singleLine = true,
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth(),
                 )
             }
         },
         confirmButton = {
             TextButton(
                 onClick = { onSubmit(name) },
-                enabled = name.isNotBlank()
+                enabled = name.isNotBlank(),
             ) {
                 Text(stringResource(R.string.create_group_cta))
             }
         },
         dismissButton = {
             TextButton(onClick = onDismiss) { Text(stringResource(R.string.auth_cancel)) }
-        }
+        },
     )
 }
 
@@ -250,7 +257,7 @@ private fun AddGroupDialog(
 @Composable
 private fun JoinGroupDialog(
     onDismiss: () -> Unit,
-    onSubmit: (groupId: String) -> Unit
+    onSubmit: (groupId: String) -> Unit,
 ) {
     var groupId by rememberSaveable { mutableStateOf("") }
 
@@ -264,7 +271,7 @@ private fun JoinGroupDialog(
                     onValueChange = { groupId = it },
                     label = { Text(stringResource(R.string.join_group_label)) },
                     singleLine = true,
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth(),
                 )
             }
         },
@@ -275,6 +282,6 @@ private fun JoinGroupDialog(
         },
         dismissButton = {
             TextButton(onClick = onDismiss) { Text(stringResource(R.string.auth_cancel)) }
-        }
+        },
     )
 }

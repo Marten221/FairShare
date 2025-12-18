@@ -15,7 +15,7 @@ data class ExpenseResponse(
     val description: String,
     val amount: Double,
     val timestamp: String,
-    val owner: User
+    val owner: User,
 )
 
 /**
@@ -26,5 +26,5 @@ data class ExpenseResponse(
  */
 data class CreateExpenseRequest(
     val description: String,
-    val amount: Double
+    val amount: Double,
 )

@@ -21,9 +21,8 @@ import java.io.IOException
  */
 class AuthRepositoryImpl(
     private val api: AuthApi = NetworkModule.authApi,
-    private val gson: Gson = Gson()
+    private val gson: Gson = Gson(),
 ) : AuthRepository {
-
     /**
      * Authenticates a user with their email and password.
      *
@@ -35,8 +34,10 @@ class AuthRepositoryImpl(
      * @return [Result.success] containing a server message on successful login,
      *         or [Result.failure] with a user friendly error message on failure.
      */
-    override suspend fun login(email: String, password: String): Result<String> =
-        call { api.login(AuthRequest(email, password)) }
+    override suspend fun login(
+        email: String,
+        password: String,
+    ): Result<String> = call { api.login(AuthRequest(email, password)) }
 
     /**
      * Registers a new user account with the provided credentials.
@@ -46,8 +47,10 @@ class AuthRepositoryImpl(
      * @return [Result.success] containing a server message on successful registration,
      *         or [Result.failure] with a user friendly error message on failure.
      */
-    override suspend fun register(email: String, password: String): Result<String> =
-        call { api.register(AuthRequest(email, password)) }
+    override suspend fun register(
+        email: String,
+        password: String,
+    ): Result<String> = call { api.register(AuthRequest(email, password)) }
 
     /**
      * Executes a Retrofit call and wraps the result in a [Result] with error handling.
@@ -87,7 +90,12 @@ class AuthRepositoryImpl(
         if (resp.code() == 401) return "Incorrect email or password"
 
         val raw = resp.errorBody()?.string().orEmpty()
-        val msg = try { gson.fromJson(raw, ApiError::class.java)?.message } catch (_: Exception) { null }
+        val msg =
+            try {
+                gson.fromJson(raw, ApiError::class.java)?.message
+            } catch (_: Exception) {
+                null
+            }
         return msg?.takeIf { it.isNotBlank() }
             ?: when (resp.code()) {
                 400 -> "Invalid request"
@@ -103,5 +111,7 @@ class AuthRepositoryImpl(
      *
      * @property message Optional error message from the server.
      */
-    private data class ApiError(val message: String?)
+    private data class ApiError(
+        val message: String?,
+    )
 }

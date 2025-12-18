@@ -15,7 +15,6 @@ import retrofit2.http.Path
  * within a specific group.
  */
 interface ExpenseApi {
-
     /**
      * Creates a new expense in the specified group.
      *
@@ -30,7 +29,7 @@ interface ExpenseApi {
     @POST("expense/{groupId}")
     suspend fun createExpense(
         @Path("groupId") groupId: String,
-        @Body body: CreateExpenseRequest
+        @Body body: CreateExpenseRequest,
     ): Response<ExpenseResponse>
 
     /**
@@ -45,6 +44,6 @@ interface ExpenseApi {
      */
     @GET("expenses/{groupId}")
     suspend fun getGroupExpenses(
-        @Path("groupId") groupId: String
+        @Path("groupId") groupId: String,
     ): Response<List<ExpenseResponse>>
 }

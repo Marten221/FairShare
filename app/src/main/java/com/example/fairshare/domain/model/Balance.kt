@@ -19,7 +19,7 @@ data class UserBalance(
     val userName: String,
     val totalOwes: Double,
     val totalIsOwed: Double,
-    val net: Double
+    val net: Double,
 )
 
 /**
@@ -38,7 +38,7 @@ data class Debt(
     val fromUserName: String,
     val toUserId: String,
     val toUserName: String,
-    val amount: Double
+    val amount: Double,
 )
 
 /**
@@ -54,5 +54,5 @@ data class Debt(
  */
 data class UserDebts(
     val owe: List<Debt>,
-    val owed: List<Debt>
+    val owed: List<Debt>,
 )

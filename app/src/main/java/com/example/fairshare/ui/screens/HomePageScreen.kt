@@ -55,9 +55,11 @@ import com.example.fairshare.ui.viewmodels.AuthViewModel
 fun HomePageScreen(
     onSignInSuccess: () -> Unit,
     isDarkTheme: Boolean,
-    onToggleTheme: () -> Unit
+    onToggleTheme: () -> Unit,
 ) {
-    val vm: AuthViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
+    val vm: AuthViewModel =
+        androidx.lifecycle.viewmodel.compose
+            .viewModel()
     val state by vm.state.collectAsState()
 
     var showSignIn by rememberSaveable { mutableStateOf(false) }
@@ -73,56 +75,67 @@ fun HomePageScreen(
                 vm.reset()
                 onSignInSuccess()
             }
+
             is AuthState.Error -> {
                 errorMsg = (state as AuthState.Error).message
                 vm.reset()
             }
+
             else -> {}
         }
     }
 
-    Scaffold() { padding ->
+    Scaffold { padding ->
         Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(padding),
+            modifier =
+                Modifier
+                    .fillMaxSize()
+                    .padding(padding),
             verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
+            horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             Text(
                 text = stringResource(R.string.home_title),
                 fontSize = dimensionResource(R.dimen.title).value.sp,
-                modifier = Modifier.padding(bottom = dimensionResource(R.dimen.home_title_bottom).value.dp)
+                modifier = Modifier.padding(bottom = dimensionResource(R.dimen.home_title_bottom).value.dp),
             )
 
             Button(
                 onClick = { showSignIn = true },
-                modifier = Modifier.size(width = dimensionResource(R.dimen.button_width).value.dp, height = dimensionResource(R.dimen.button_height).value.dp)
+                modifier =
+                    Modifier.size(
+                        width = dimensionResource(R.dimen.button_width).value.dp,
+                        height = dimensionResource(R.dimen.button_height).value.dp,
+                    ),
             ) {
                 Text(
                     text = stringResource(R.string.home_sign_in),
-                    fontSize = dimensionResource(R.dimen.button_text).value.sp
+                    fontSize = dimensionResource(R.dimen.button_text).value.sp,
                 )
             }
 
             Button(
                 onClick = { showSignUp = true },
-                modifier = Modifier
-                    .padding(top = dimensionResource(R.dimen.spacing_l).value.dp)
-                    .size(width = dimensionResource(R.dimen.button_width).value.dp, height = dimensionResource(R.dimen.button_height).value.dp)
+                modifier =
+                    Modifier
+                        .padding(top = dimensionResource(R.dimen.spacing_l).value.dp)
+                        .size(
+                            width = dimensionResource(R.dimen.button_width).value.dp,
+                            height = dimensionResource(R.dimen.button_height).value.dp,
+                        ),
             ) {
                 Text(
                     text = stringResource(R.string.home_sign_up),
-                    fontSize = dimensionResource(R.dimen.button_text).value.sp
+                    fontSize = dimensionResource(R.dimen.button_text).value.sp,
                 )
             }
             TextButton(
                 onClick = onToggleTheme,
-                modifier = Modifier.padding(top = dimensionResource(R.dimen.spacing_l).value.dp)
+                modifier = Modifier.padding(top = dimensionResource(R.dimen.spacing_l).value.dp),
             ) {
                 Text(
                     text = if (isDarkTheme) "Switch to light mode" else "Switch to dark mode",
-                    fontSize = 14.sp
+                    fontSize = 14.sp,
                 )
             }
         }
@@ -130,28 +143,28 @@ fun HomePageScreen(
 
     if (showSignIn) {
         SignInDialog(
-            onDismiss = { showSignIn = false},
+            onDismiss = { showSignIn = false },
             onSubmit = { email, password ->
                 vm.login(email, password)
-            }
+            },
         )
     }
 
     if (showSignUp) {
         SignUpDialog(
             onDismiss = { showSignUp = false },
-            onSubmit = { email, password -> vm.register(email, password) }
+            onSubmit = { email, password -> vm.register(email, password) },
         )
     }
 
     if (errorMsg != null) {
         AlertDialog(
             onDismissRequest = { errorMsg = null },
-            title = { Text(stringResource(R.string.sign_in_failed))},
+            title = { Text(stringResource(R.string.sign_in_failed)) },
             text = { Text(errorMsg!!) },
             confirmButton = {
                 TextButton(onClick = { errorMsg = null }) { Text("OK") }
-            }
+            },
         )
     }
 }
@@ -168,7 +181,7 @@ fun HomePageScreen(
 @Composable
 private fun SignInDialog(
     onDismiss: () -> Unit,
-    onSubmit: (email: String, password: String) -> Unit
+    onSubmit: (email: String, password: String) -> Unit,
 ) {
     var email by rememberSaveable { mutableStateOf("") }
     var password by rememberSaveable { mutableStateOf("") }
@@ -193,11 +206,12 @@ private fun SignInDialog(
                             Text(stringResource(R.string.auth_email_error))
                         }
                     },
-                    keyboardOptions = KeyboardOptions(
-                        keyboardType = KeyboardType.Email,
-                        imeAction = ImeAction.Next
-                    ),
-                    modifier = Modifier.fillMaxWidth()
+                    keyboardOptions =
+                        KeyboardOptions(
+                            keyboardType = KeyboardType.Email,
+                            imeAction = ImeAction.Next,
+                        ),
+                    modifier = Modifier.fillMaxWidth(),
                 )
 
                 OutlinedTextField(
@@ -206,25 +220,26 @@ private fun SignInDialog(
                     label = { Text(stringResource(R.string.auth_label_password)) },
                     singleLine = true,
                     visualTransformation = PasswordVisualTransformation(),
-                    keyboardOptions = KeyboardOptions(
-                        keyboardType = KeyboardType.Password,
-                        imeAction = ImeAction.Done
-                    ),
-                    modifier = Modifier.fillMaxWidth()
+                    keyboardOptions =
+                        KeyboardOptions(
+                            keyboardType = KeyboardType.Password,
+                            imeAction = ImeAction.Done,
+                        ),
+                    modifier = Modifier.fillMaxWidth(),
                 )
             }
         },
         confirmButton = {
             TextButton(
                 onClick = { onSubmit(email, password) },
-                enabled = isEmailValid && password.isNotBlank()
+                enabled = isEmailValid && password.isNotBlank(),
             ) {
                 Text(stringResource(R.string.auth_continue))
             }
         },
         dismissButton = {
             TextButton(onClick = onDismiss) { Text(stringResource(R.string.auth_cancel)) }
-        }
+        },
     )
 }
 
@@ -240,7 +255,7 @@ private fun SignInDialog(
 @Composable
 private fun SignUpDialog(
     onDismiss: () -> Unit,
-    onSubmit: (email: String, password: String) -> Unit
+    onSubmit: (email: String, password: String) -> Unit,
 ) {
     var email by rememberSaveable { mutableStateOf("") }
     var password by rememberSaveable { mutableStateOf("") }
@@ -254,7 +269,8 @@ private fun SignUpDialog(
         text = {
             Column(verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.spacing_md))) {
                 OutlinedTextField(
-                    value = email, onValueChange = { email = it },
+                    value = email,
+                    onValueChange = { email = it },
                     label = { Text(stringResource(R.string.auth_label_email)) },
                     singleLine = true,
                     isError = email.isNotBlank() && !isEmailValid,
@@ -264,15 +280,16 @@ private fun SignUpDialog(
                         }
                     },
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email, imeAction = ImeAction.Next),
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth(),
                 )
                 OutlinedTextField(
-                    value = password, onValueChange = { password = it },
+                    value = password,
+                    onValueChange = { password = it },
                     label = { Text(stringResource(R.string.auth_label_password)) },
                     singleLine = true,
                     visualTransformation = PasswordVisualTransformation(),
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password, imeAction = ImeAction.Done),
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth(),
                 )
             }
         },
@@ -281,6 +298,6 @@ private fun SignUpDialog(
                 Text(stringResource(R.string.auth_continue))
             }
         },
-        dismissButton = { TextButton(onClick = onDismiss) { Text(stringResource(R.string.auth_cancel)) } }
+        dismissButton = { TextButton(onClick = onDismiss) { Text(stringResource(R.string.auth_cancel)) } },
     )
 }

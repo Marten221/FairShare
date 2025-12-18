@@ -15,7 +15,6 @@ import retrofit2.http.Path
  * group information for the authenticated user.
  */
 interface GroupsApi {
-
     /**
      * Creates a new expense sharing group.
      *
@@ -26,7 +25,9 @@ interface GroupsApi {
      *         owner information, and initial member list.
      */
     @POST("group")
-    suspend fun createGroup(@Body body: GroupRequest): Response<GroupResponse>
+    suspend fun createGroup(
+        @Body body: GroupRequest,
+    ): Response<GroupResponse>
 
     /**
      * Retrieves all groups the authenticated user is a member of.
@@ -47,7 +48,9 @@ interface GroupsApi {
      *         or an error response if the group doesn't exist or user is already a member.
      */
     @POST("group/{groupId}")
-    suspend fun joinGroup(@Path("groupId") groupId: String): Response<Unit>
+    suspend fun joinGroup(
+        @Path("groupId") groupId: String,
+    ): Response<Unit>
 
     /**
      * Retrieves details for a specific group by its ID.
@@ -57,5 +60,7 @@ interface GroupsApi {
      *         or an error response if the group doesn't exist or user lacks access.
      */
     @GET("group/{groupId}")
-    suspend fun getGroupById(@Path("groupId") groupId: String): Response<GroupResponse>
+    suspend fun getGroupById(
+        @Path("groupId") groupId: String,
+    ): Response<GroupResponse>
 }

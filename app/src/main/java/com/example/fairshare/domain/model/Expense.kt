@@ -19,5 +19,5 @@ data class Expense(
     val description: String,
     val amount: Double,
     val ownerEmail: String,
-    val date: String
+    val date: String,
 )

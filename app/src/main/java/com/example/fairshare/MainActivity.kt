@@ -22,7 +22,6 @@ import com.example.fairshare.ui.theme.FairshareTheme
  * - Root navigation setup via [AppNav]
  */
 class MainActivity : ComponentActivity() {
-
     /**
      * Called when the activity is first created.
      *
@@ -45,7 +44,7 @@ class MainActivity : ComponentActivity() {
                 FairshareTheme(darkTheme = isDarkTheme) {
                     AppNav(
                         isDarkTheme = isDarkTheme,
-                        onToggleTheme = { isDarkTheme = !isDarkTheme }
+                        onToggleTheme = { isDarkTheme = !isDarkTheme },
                     )
                 }
             }

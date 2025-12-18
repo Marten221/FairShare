@@ -32,7 +32,7 @@ import com.example.fairshare.ui.viewmodels.GroupsState
 @Composable
 fun AppNav(
     isDarkTheme: Boolean,
-    onToggleTheme: () -> Unit
+    onToggleTheme: () -> Unit,
 ) {
     val nav = rememberNavController()
     val vm: GroupsListViewModel = viewModel()
@@ -44,19 +44,19 @@ fun AppNav(
                     nav.navigate("groups")
                 },
                 isDarkTheme = isDarkTheme,
-                onToggleTheme = onToggleTheme
+                onToggleTheme = onToggleTheme,
             )
         }
         composable("groups") {
             GroupsListScreen(
                 viewModel = vm,
-                onBack = { nav.popBackStack()},
-                onGroupClick = { groupId -> nav.navigate("group/$groupId")}
+                onBack = { nav.popBackStack() },
+                onGroupClick = { groupId -> nav.navigate("group/$groupId") },
             )
         }
         composable(
             route = "group/{groupId}",
-            arguments = listOf(navArgument("groupId") { type = NavType.StringType })
+            arguments = listOf(navArgument("groupId") { type = NavType.StringType }),
         ) { backStackEntry ->
             val groupId = backStackEntry.arguments?.getString("groupId") ?: return@composable
             val groupsVm: GroupsListViewModel = viewModel()
@@ -84,10 +84,13 @@ fun AppNav(
                         onAddExpense = { description, amount ->
                             detailVm.addExpense(groupId, description, amount)
                         },
-                        onBack = { nav.popBackStack() }
+                        onBack = { nav.popBackStack() },
                     )
                 }
-                else -> Unit
+
+                else -> {
+                    Unit
+                }
             }
         }
     }

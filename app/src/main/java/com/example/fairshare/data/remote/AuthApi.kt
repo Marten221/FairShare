@@ -13,7 +13,6 @@ import retrofit2.http.POST
  * All endpoints are public (no authentication required).
  */
 interface AuthApi {
-
     /**
      * Registers a new user account.
      *
@@ -23,7 +22,9 @@ interface AuthApi {
      */
     @POST("public/register")
     @Headers("Content-Type: application/json")
-    suspend fun register(@Body body: AuthRequest): Response<String>
+    suspend fun register(
+        @Body body: AuthRequest,
+    ): Response<String>
 
     /**
      * Authenticates an existing user.
@@ -37,5 +38,7 @@ interface AuthApi {
      */
     @POST("public/login")
     @Headers("Content-Type: application/json")
-    suspend fun login(@Body body: AuthRequest): Response<String>
+    suspend fun login(
+        @Body body: AuthRequest,
+    ): Response<String>
 }

@@ -71,7 +71,7 @@ fun GroupDetailScreen(
     balanceState: BalanceState,
     debtsState: DebtsState,
     onAddExpense: (description: String, amount: Double) -> Unit,
-    onBack: () -> Unit
+    onBack: () -> Unit,
 ) {
     var showAddExpenseDialog by rememberSaveable { mutableStateOf(false) }
     var showDebtsDialog by rememberSaveable { mutableStateOf(false) }
@@ -83,54 +83,56 @@ fun GroupDetailScreen(
                     Text(
                         group?.name ?: stringResource(R.string.group_fallback_title),
                         maxLines = 1,
-                        overflow = TextOverflow.Ellipsis
+                        overflow = TextOverflow.Ellipsis,
                     )
                 },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
                         Icon(
                             Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = stringResource(R.string.nav_back)
+                            contentDescription = stringResource(R.string.nav_back),
                         )
                     }
-                }
+                },
             )
-        }
+        },
     ) { padding ->
         if (group == null) {
             Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(padding)
-                    .padding(dimensionResource(R.dimen.spacing_l)),
-                verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.spacing_md))
+                modifier =
+                    Modifier
+                        .fillMaxSize()
+                        .padding(padding)
+                        .padding(dimensionResource(R.dimen.spacing_l)),
+                verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.spacing_md)),
             ) {
                 Text(
                     stringResource(R.string.group_not_found_title),
-                    style = MaterialTheme.typography.titleMedium
+                    style = MaterialTheme.typography.titleMedium,
                 )
                 Text(
                     stringResource(R.string.group_not_found_body),
-                    style = MaterialTheme.typography.bodyMedium
+                    style = MaterialTheme.typography.bodyMedium,
                 )
             }
             return@Scaffold
         }
 
         Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(padding)
-                .padding(dimensionResource(R.dimen.spacing_l)),
-            verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.spacing_md))
+            modifier =
+                Modifier
+                    .fillMaxSize()
+                    .padding(padding)
+                    .padding(dimensionResource(R.dimen.spacing_l)),
+            verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.spacing_md)),
         ) {
             Text(
                 pluralStringResource(
                     R.plurals.members_count,
                     group.memberCount,
-                    group.memberCount
+                    group.memberCount,
                 ),
-                style = MaterialTheme.typography.bodyMedium
+                style = MaterialTheme.typography.bodyMedium,
             )
             Text(
                 stringResource(R.string.group_id_label, group.id),
@@ -140,7 +142,7 @@ fun GroupDetailScreen(
 
             BalanceSummary(
                 balanceState = balanceState,
-                onClick = { showDebtsDialog = true }
+                onClick = { showDebtsDialog = true },
             )
 
             Spacer(Modifier.height(dimensionResource(R.dimen.spacing_md)))
@@ -148,11 +150,11 @@ fun GroupDetailScreen(
 
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween
+                horizontalArrangement = Arrangement.SpaceBetween,
             ) {
                 Text(
                     stringResource(R.string.expenses_title),
-                    style = MaterialTheme.typography.titleMedium
+                    style = MaterialTheme.typography.titleMedium,
                 )
                 Button(onClick = { showAddExpenseDialog = true }) {
                     Text(stringResource(R.string.add_expense))
@@ -161,10 +163,11 @@ fun GroupDetailScreen(
 
             when (val s = expensesState) {
                 is ExpensesState.Idle,
-                is ExpensesState.Loading -> {
+                is ExpensesState.Loading,
+                -> {
                     Text(
                         text = stringResource(R.string.expenses_loading),
-                        style = MaterialTheme.typography.bodyMedium
+                        style = MaterialTheme.typography.bodyMedium,
                     )
                 }
 
@@ -172,7 +175,7 @@ fun GroupDetailScreen(
                     Text(
                         text = stringResource(R.string.expenses_error),
                         style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.error
+                        color = MaterialTheme.colorScheme.error,
                     )
                 }
 
@@ -181,7 +184,7 @@ fun GroupDetailScreen(
                         Text(
                             stringResource(R.string.expenses_empty),
                             style = MaterialTheme.typography.bodyMedium,
-                            modifier = Modifier.fillMaxWidth()
+                            modifier = Modifier.fillMaxWidth(),
                         )
                     } else {
                         ExpensesList(expenses = s.expenses)
@@ -197,14 +200,14 @@ fun GroupDetailScreen(
             onSubmit = { description, amount ->
                 onAddExpense(description, amount)
                 showAddExpenseDialog = false
-            }
+            },
         )
     }
 
     if (showDebtsDialog) {
         DebtsDialog(
             debtsState = debtsState,
-            onDismiss = { showDebtsDialog = false }
+            onDismiss = { showDebtsDialog = false },
         )
     }
 }
@@ -222,14 +225,15 @@ fun GroupDetailScreen(
 @Composable
 private fun BalanceSummary(
     balanceState: BalanceState,
-    onClick: () -> Unit
+    onClick: () -> Unit,
 ) {
     when (val s = balanceState) {
         is BalanceState.Idle,
-        is BalanceState.Loading -> {
+        is BalanceState.Loading,
+        -> {
             Text(
                 text = "Calculating your balance...",
-                style = MaterialTheme.typography.bodyMedium
+                style = MaterialTheme.typography.bodyMedium,
             )
         }
 
@@ -237,46 +241,49 @@ private fun BalanceSummary(
             Text(
                 text = "Failed to load balance: ${s.message}",
                 style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.error
+                color = MaterialTheme.colorScheme.error,
             )
         }
 
         is BalanceState.Success -> {
             val net = s.balance.net
             val absNet = abs(net)
-            val mainText = when {
-                net > 0.01 -> "You are owed €${"%.2f".format(absNet)} in this group"
-                net < -0.01 -> "You owe €${"%.2f".format(absNet)} in this group"
-                else -> "You are settled up in this group"
-            }
+            val mainText =
+                when {
+                    net > 0.01 -> "You are owed €${"%.2f".format(absNet)} in this group"
+                    net < -0.01 -> "You owe €${"%.2f".format(absNet)} in this group"
+                    else -> "You are settled up in this group"
+                }
 
-            val subText = if (absNet > 0.01) {
-                "Tap to see who you owe and who owes you"
-            } else {
-                "No outstanding balances with other members"
-            }
+            val subText =
+                if (absNet > 0.01) {
+                    "Tap to see who you owe and who owes you"
+                } else {
+                    "No outstanding balances with other members"
+                }
 
             ElevatedCard(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .clickable(enabled = absNet > 0.01) { onClick() }
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .clickable(enabled = absNet > 0.01) { onClick() },
             ) {
                 Column(
                     modifier = Modifier.padding(dimensionResource(R.dimen.spacing_md)),
-                    verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.spacing_xs))
+                    verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.spacing_xs)),
                 ) {
                     Text(
                         text = "Your balance",
-                        style = MaterialTheme.typography.titleMedium
+                        style = MaterialTheme.typography.titleMedium,
                     )
                     Text(
                         text = mainText,
-                        style = MaterialTheme.typography.bodyMedium
+                        style = MaterialTheme.typography.bodyMedium,
                     )
                     Text(
                         text = subText,
                         style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
                 }
             }
@@ -295,7 +302,7 @@ private fun BalanceSummary(
 @Composable
 private fun DebtsDialog(
     debtsState: DebtsState,
-    onDismiss: () -> Unit
+    onDismiss: () -> Unit,
 ) {
     AlertDialog(
         onDismissRequest = onDismiss,
@@ -303,7 +310,8 @@ private fun DebtsDialog(
         text = {
             when (val s = debtsState) {
                 is DebtsState.Idle,
-                is DebtsState.Loading -> {
+                is DebtsState.Loading,
+                -> {
                     Text("Loading details…")
                 }
 
@@ -320,7 +328,7 @@ private fun DebtsDialog(
             TextButton(onClick = onDismiss) {
                 Text("Close")
             }
-        }
+        },
     )
 }
 
@@ -332,17 +340,17 @@ private fun DebtsDialog(
 @Composable
 private fun DebtsDialogBody(debts: UserDebts) {
     Column(
-        verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.spacing_sm))
+        verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.spacing_sm)),
     ) {
         if (debts.owe.isNotEmpty()) {
             Text(
                 text = "You owe",
-                style = MaterialTheme.typography.titleSmall
+                style = MaterialTheme.typography.titleSmall,
             )
             debts.owe.forEach { d: Debt ->
                 Text(
                     text = "• ${d.toUserName}: €${"%.2f".format(d.amount)}",
-                    style = MaterialTheme.typography.bodyMedium
+                    style = MaterialTheme.typography.bodyMedium,
                 )
             }
         }
@@ -351,12 +359,12 @@ private fun DebtsDialogBody(debts: UserDebts) {
             Spacer(Modifier.height(dimensionResource(R.dimen.spacing_sm)))
             Text(
                 text = "Owe you",
-                style = MaterialTheme.typography.titleSmall
+                style = MaterialTheme.typography.titleSmall,
             )
             debts.owed.forEach { d: Debt ->
                 Text(
                     text = "• ${d.fromUserName}: €${"%.2f".format(d.amount)}",
-                    style = MaterialTheme.typography.bodyMedium
+                    style = MaterialTheme.typography.bodyMedium,
                 )
             }
         }
@@ -364,7 +372,7 @@ private fun DebtsDialogBody(debts: UserDebts) {
         if (debts.owe.isEmpty() && debts.owed.isEmpty()) {
             Text(
                 text = "You have no outstanding balances with anyone in this group.",
-                style = MaterialTheme.typography.bodyMedium
+                style = MaterialTheme.typography.bodyMedium,
             )
         }
     }
@@ -381,37 +389,38 @@ private fun DebtsDialogBody(debts: UserDebts) {
 private fun ExpensesList(expenses: List<Expense>) {
     LazyColumn(
         modifier = Modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.spacing_sm))
+        verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.spacing_sm)),
     ) {
         items(expenses) { expense ->
             Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(dimensionResource(R.dimen.spacing_sm))
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .padding(dimensionResource(R.dimen.spacing_sm)),
             ) {
                 Text(
                     expense.description,
-                    style = MaterialTheme.typography.bodyLarge
+                    style = MaterialTheme.typography.bodyLarge,
                 )
                 Spacer(Modifier.height(dimensionResource(R.dimen.spacing_xs)))
 
                 Row(
                     modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween
+                    horizontalArrangement = Arrangement.SpaceBetween,
                 ) {
                     Text(
                         text = "€${"%.2f".format(expense.amount)}",
-                        style = MaterialTheme.typography.bodyMedium
+                        style = MaterialTheme.typography.bodyMedium,
                     )
                     Text(
                         text = expense.date,
-                        style = MaterialTheme.typography.bodySmall
+                        style = MaterialTheme.typography.bodySmall,
                     )
                 }
 
                 Text(
                     text = stringResource(R.string.expense_owner_label, expense.ownerEmail),
-                    style = MaterialTheme.typography.bodySmall
+                    style = MaterialTheme.typography.bodySmall,
                 )
                 Spacer(Modifier.height(dimensionResource(R.dimen.spacing_sm)))
                 HorizontalDivider(Modifier, DividerDefaults.Thickness, DividerDefaults.color)
@@ -432,7 +441,7 @@ private fun ExpensesList(expenses: List<Expense>) {
 @Composable
 private fun AddExpenseDialog(
     onDismiss: () -> Unit,
-    onSubmit: (description: String, amount: Double) -> Unit
+    onSubmit: (description: String, amount: Double) -> Unit,
 ) {
     var description by rememberSaveable { mutableStateOf("") }
     var amountText by rememberSaveable { mutableStateOf("") }
@@ -447,14 +456,14 @@ private fun AddExpenseDialog(
                     onValueChange = { description = it },
                     label = { Text(stringResource(R.string.add_expense_description_label)) },
                     singleLine = true,
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth(),
                 )
                 OutlinedTextField(
                     value = amountText,
                     onValueChange = { amountText = it },
                     label = { Text(stringResource(R.string.add_expense_amount_label)) },
                     singleLine = true,
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth(),
                 )
             }
         },
@@ -464,13 +473,13 @@ private fun AddExpenseDialog(
                     val amount = amountText.toDoubleOrNull() ?: 0.0
                     onSubmit(description, amount)
                 },
-                enabled = description.isNotBlank() && amountText.toDoubleOrNull() != null
+                enabled = description.isNotBlank() && amountText.toDoubleOrNull() != null,
             ) {
                 Text(stringResource(R.string.add_expense_cta))
             }
         },
         dismissButton = {
             TextButton(onClick = onDismiss) { Text(stringResource(R.string.auth_cancel)) }
-        }
+        },
     )
 }
