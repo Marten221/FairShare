@@ -99,9 +99,9 @@ The project uses the following key dependencies:
 - **Viewing Balances**: You can see your balance at the top of the group detail screen. You can see if the group as a whole owes you or if you owe the group.
 - **Settling Up**: If you click on your balance you can see how to settle up with the fewest amount of transactions. You can see who you need to send money to and who has to send money to you.
 
-### Screenshots / Demo
+### Demo
 
-#### Screenshots placeholder
+![Demo GIF](demo.gif)
 
 ## Project Structure
 
