@@ -28,14 +28,18 @@ sealed class ExpensesState {
      *
      * @property expenses List of expenses in the group.
      */
-    data class Success(val expenses: List<Expense>) : ExpensesState()
+    data class Success(
+        val expenses: List<Expense>,
+    ) : ExpensesState()
 
     /**
      * Failed to load expenses.
      *
      * @property message Error message describing the failure.
      */
-    data class Error(val message: String) : ExpensesState()
+    data class Error(
+        val message: String,
+    ) : ExpensesState()
 }
 
 /**
@@ -53,14 +57,18 @@ sealed class BalanceState {
      *
      * @property balance User's balance summary in the group.
      */
-    data class Success(val balance: UserBalance) : BalanceState()
+    data class Success(
+        val balance: UserBalance,
+    ) : BalanceState()
 
     /**
      * Failed to load balance.
      *
      * @property message Error message describing the failure.
      */
-    data class Error(val message: String) : BalanceState()
+    data class Error(
+        val message: String,
+    ) : BalanceState()
 }
 
 /**
@@ -78,14 +86,18 @@ sealed class DebtsState {
      *
      * @property debts Detailed debt breakdown for the user.
      */
-    data class Success(val debts: UserDebts) : DebtsState()
+    data class Success(
+        val debts: UserDebts,
+    ) : DebtsState()
 
     /**
      * Failed to load debts.
      *
      * @property message Error message describing the failure.
      */
-    data class Error(val message: String) : DebtsState()
+    data class Error(
+        val message: String,
+    ) : DebtsState()
 }
 
 /**
@@ -99,9 +111,8 @@ sealed class DebtsState {
  */
 class GroupDetailViewModel(
     private val repo: ExpenseRepository = ExpenseRepositoryImpl(),
-    private val balanceRepo: BalanceRepository = BalanceRepositoryImpl()
+    private val balanceRepo: BalanceRepository = BalanceRepositoryImpl(),
 ) : ViewModel() {
-
     private val _state = MutableStateFlow<ExpensesState>(ExpensesState.Idle)
 
     /**
@@ -141,10 +152,11 @@ class GroupDetailViewModel(
         viewModelScope.launch {
             _state.value = ExpensesState.Loading
             val res = repo.getGroupExpenses(groupId)
-            _state.value = res.fold(
-                onSuccess = { ExpensesState.Success(it) },
-                onFailure = { ExpensesState.Error(it.message ?: "Failed to load expenses") }
-            )
+            _state.value =
+                res.fold(
+                    onSuccess = { ExpensesState.Success(it) },
+                    onFailure = { ExpensesState.Error(it.message ?: "Failed to load expenses") },
+                )
         }
     }
 
@@ -162,16 +174,18 @@ class GroupDetailViewModel(
             _debtsState.value = DebtsState.Loading
 
             val balanceRes = balanceRepo.getUserBalance(groupId)
-            _balanceState.value = balanceRes.fold(
-                onSuccess = { BalanceState.Success(it) },
-                onFailure = { BalanceState.Error(it.message ?: "Failed to load balance") }
-            )
+            _balanceState.value =
+                balanceRes.fold(
+                    onSuccess = { BalanceState.Success(it) },
+                    onFailure = { BalanceState.Error(it.message ?: "Failed to load balance") },
+                )
 
             val debtsRes = balanceRepo.getUserDebts(groupId)
-            _debtsState.value = debtsRes.fold(
-                onSuccess = { DebtsState.Success(it) },
-                onFailure = { DebtsState.Error(it.message ?: "Failed to load debts") }
-            )
+            _debtsState.value =
+                debtsRes.fold(
+                    onSuccess = { DebtsState.Success(it) },
+                    onFailure = { DebtsState.Error(it.message ?: "Failed to load debts") },
+                )
         }
     }
 
@@ -185,7 +199,11 @@ class GroupDetailViewModel(
      * @param description User-provided description of the expense.
      * @param amount Total expense amount to be split among group members.
      */
-    fun addExpense(groupId: String, description: String, amount: Double) {
+    fun addExpense(
+        groupId: String,
+        description: String,
+        amount: Double,
+    ) {
         viewModelScope.launch {
             val res = repo.createExpense(groupId, description, amount)
             res.onSuccess {

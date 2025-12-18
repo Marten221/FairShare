@@ -9,7 +9,6 @@ import com.example.fairshare.domain.model.Expense
  * Implementations handle the actual network communication and data mapping.
  */
 interface ExpenseRepository {
-
     /**
      * Creates a new expense in the specified group.
      *
@@ -25,7 +24,7 @@ interface ExpenseRepository {
     suspend fun createExpense(
         groupId: String,
         description: String,
-        amount: Double
+        amount: Double,
     ): Result<Expense>
 
     /**

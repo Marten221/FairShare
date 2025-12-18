@@ -23,14 +23,18 @@ sealed class AuthState {
      *
      * @property message Success message from the server.
      */
-    data class Success(val message: String) : AuthState()
+    data class Success(
+        val message: String,
+    ) : AuthState()
 
     /**
      * Authentication operation failed.
      *
      * @property message User friendly error message describing the failure.
      */
-    data class Error(val message: String) : AuthState()
+    data class Error(
+        val message: String,
+    ) : AuthState()
 }
 
 /**
@@ -43,9 +47,8 @@ sealed class AuthState {
  *                Defaults to [AuthRepositoryImpl].
  */
 class AuthViewModel(
-    private val repo: AuthRepository = AuthRepositoryImpl()
+    private val repo: AuthRepository = AuthRepositoryImpl(),
 ) : ViewModel() {
-
     private val _state = MutableStateFlow<AuthState>(AuthState.Idle)
 
     /**
@@ -64,13 +67,17 @@ class AuthViewModel(
      * @param email User's email address.
      * @param password User's password.
      */
-    fun login(email: String, password: String) = viewModelScope.launch {
+    fun login(
+        email: String,
+        password: String,
+    ) = viewModelScope.launch {
         _state.value = AuthState.Loading
         val res = repo.login(email, password)
-        _state.value = res.fold(
-            onSuccess = { AuthState.Success(it) },
-            onFailure = { AuthState.Error(it.message ?: "Unknown error") }
-        )
+        _state.value =
+            res.fold(
+                onSuccess = { AuthState.Success(it) },
+                onFailure = { AuthState.Error(it.message ?: "Unknown error") },
+            )
     }
 
     /**
@@ -82,13 +89,17 @@ class AuthViewModel(
      * @param email User's email address (must be unique).
      * @param password User's chosen password.
      */
-    fun register(email: String, password: String) = viewModelScope.launch {
+    fun register(
+        email: String,
+        password: String,
+    ) = viewModelScope.launch {
         _state.value = AuthState.Loading
         val res = repo.register(email, password)
-        _state.value = res.fold(
-            onSuccess = { AuthState.Success(it) },
-            onFailure = { AuthState.Error(it.message ?: "Unknown error") }
-        )
+        _state.value =
+            res.fold(
+                onSuccess = { AuthState.Success(it) },
+                onFailure = { AuthState.Error(it.message ?: "Unknown error") },
+            )
     }
 
     /**
@@ -97,5 +108,7 @@ class AuthViewModel(
      * Should be called after handling success or error states to prepare
      * for subsequent authentication attempts.
      */
-    fun reset() { _state.value = AuthState.Idle }
+    fun reset() {
+        _state.value = AuthState.Idle
+    }
 }

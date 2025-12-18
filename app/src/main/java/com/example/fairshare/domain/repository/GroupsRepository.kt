@@ -9,7 +9,6 @@ import com.example.fairshare.domain.model.Group
  * Implementations handle the actual network communication and data mapping.
  */
 interface GroupsRepository {
-
     /**
      * Creates a new expense sharing group.
      *

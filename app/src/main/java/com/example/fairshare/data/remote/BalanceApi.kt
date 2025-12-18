@@ -13,7 +13,6 @@ import retrofit2.http.Path
  * and detailed debt information within a specific group.
  */
 interface BalanceApi {
-
     /**
      * Retrieves the current user's balance summary for a specific group.
      *
@@ -26,7 +25,7 @@ interface BalanceApi {
      */
     @GET("userbalance/{groupId}")
     suspend fun getUserBalance(
-        @Path("groupId") groupId: String
+        @Path("groupId") groupId: String,
     ): Response<UserBalanceResponse>
 
     /**
@@ -40,6 +39,6 @@ interface BalanceApi {
      */
     @GET("userdebts/{groupId}")
     suspend fun getUserDebts(
-        @Path("groupId") groupId: String
+        @Path("groupId") groupId: String,
     ): Response<UserDebtsResponse>
 }

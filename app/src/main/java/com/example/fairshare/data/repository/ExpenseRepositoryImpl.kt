@@ -21,9 +21,8 @@ import java.time.format.DateTimeFormatter
  *               Defaults to [NetworkModule.expensesApi].
  */
 class ExpenseRepositoryImpl(
-    private val api: ExpenseApi = NetworkModule.expensesApi
+    private val api: ExpenseApi = NetworkModule.expensesApi,
 ) : ExpenseRepository {
-
     companion object {
         /**
          * Date formatter for converting timestamps to display format (dd.MM.yyyy).
@@ -45,7 +44,8 @@ class ExpenseRepositoryImpl(
     @RequiresApi(Build.VERSION_CODES.O)
     private fun String.toDisplayDate(): String =
         try {
-            LocalDateTime.parse(this)
+            LocalDateTime
+                .parse(this)
                 .toLocalDate()
                 .format(DATE_FORMATTER)
         } catch (e: Exception) {
@@ -69,32 +69,34 @@ class ExpenseRepositoryImpl(
     override suspend fun createExpense(
         groupId: String,
         description: String,
-        amount: Double
-    ): Result<Expense> = withContext(Dispatchers.IO) {
-        try {
-            val response = api.createExpense(
-                groupId = groupId,
-                body = CreateExpenseRequest(description, amount)
-            )
-
-            if (response.isSuccessful && response.body() != null) {
-                val e = response.body()!!
-                Result.success(
-                    Expense(
-                        id = e.id,
-                        description = e.description,
-                        amount = e.amount,
-                        ownerEmail = e.owner.email,
-                        date = e.timestamp.toDisplayDate()
+        amount: Double,
+    ): Result<Expense> =
+        withContext(Dispatchers.IO) {
+            try {
+                val response =
+                    api.createExpense(
+                        groupId = groupId,
+                        body = CreateExpenseRequest(description, amount),
                     )
-                )
-            } else {
-                Result.failure(Exception("Failed to create expense: ${response.code()}"))
+
+                if (response.isSuccessful && response.body() != null) {
+                    val e = response.body()!!
+                    Result.success(
+                        Expense(
+                            id = e.id,
+                            description = e.description,
+                            amount = e.amount,
+                            ownerEmail = e.owner.email,
+                            date = e.timestamp.toDisplayDate(),
+                        ),
+                    )
+                } else {
+                    Result.failure(Exception("Failed to create expense: ${response.code()}"))
+                }
+            } catch (e: Exception) {
+                Result.failure(e)
             }
-        } catch (e: Exception) {
-            Result.failure(e)
         }
-    }
 
     /**
      * Retrieves all expenses for a specific group.
@@ -112,15 +114,16 @@ class ExpenseRepositoryImpl(
             try {
                 val response = api.getGroupExpenses(groupId)
                 if (response.isSuccessful && response.body() != null) {
-                    val expenses = response.body()!!.map { e ->
-                        Expense(
-                            id = e.id,
-                            description = e.description,
-                            amount = e.amount,
-                            ownerEmail = e.owner.email,
-                            date = e.timestamp.toDisplayDate()
-                        )
-                    }
+                    val expenses =
+                        response.body()!!.map { e ->
+                            Expense(
+                                id = e.id,
+                                description = e.description,
+                                amount = e.amount,
+                                ownerEmail = e.owner.email,
+                                date = e.timestamp.toDisplayDate(),
+                            )
+                        }
                     Result.success(expenses)
                 } else {
                     Result.failure(Exception("Failed to load expenses: ${response.code()}"))

@@ -19,9 +19,8 @@ import kotlinx.coroutines.withContext
  *               Defaults to [NetworkModule.balanceApi].
  */
 class BalanceRepositoryImpl(
-    private val api: BalanceApi = NetworkModule.balanceApi
+    private val api: BalanceApi = NetworkModule.balanceApi,
 ) : BalanceRepository {
-
     /**
      * Retrieves the current user's balance summary for a specific group.
      *
@@ -44,8 +43,8 @@ class BalanceRepositoryImpl(
                             userName = b.userName,
                             totalOwes = b.totalOwes,
                             totalIsOwed = b.totalIsOwed,
-                            net = b.net
-                        )
+                            net = b.net,
+                        ),
                     )
                 } else {
                     Result.failure(Exception("Failed to load balance: ${response.code()}"))
@@ -73,25 +72,27 @@ class BalanceRepositoryImpl(
                     val d = response.body()!!
                     Result.success(
                         UserDebts(
-                            owe = d.owe.map {
-                                Debt(
-                                    fromUserId = it.fromUserId,
-                                    fromUserName = it.fromUserName,
-                                    toUserId = it.toUserId,
-                                    toUserName = it.toUserName,
-                                    amount = it.amount
-                                )
-                            },
-                            owed = d.owed.map {
-                                Debt(
-                                    fromUserId = it.fromUserId,
-                                    fromUserName = it.fromUserName,
-                                    toUserId = it.toUserId,
-                                    toUserName = it.toUserName,
-                                    amount = it.amount
-                                )
-                            }
-                        )
+                            owe =
+                                d.owe.map {
+                                    Debt(
+                                        fromUserId = it.fromUserId,
+                                        fromUserName = it.fromUserName,
+                                        toUserId = it.toUserId,
+                                        toUserName = it.toUserName,
+                                        amount = it.amount,
+                                    )
+                                },
+                            owed =
+                                d.owed.map {
+                                    Debt(
+                                        fromUserId = it.fromUserId,
+                                        fromUserName = it.fromUserName,
+                                        toUserId = it.toUserId,
+                                        toUserName = it.toUserName,
+                                        amount = it.amount,
+                                    )
+                                },
+                        ),
                     )
                 } else {
                     Result.failure(Exception("Failed to load debts: ${response.code()}"))

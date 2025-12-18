@@ -7,7 +7,6 @@ package com.example.fairshare.domain.repository
  * Implementations handle the actual network communication and session management.
  */
 interface AuthRepository {
-
     /**
      * Authenticates a user with their email and password.
      *
@@ -16,7 +15,10 @@ interface AuthRepository {
      * @return [Result.success] containing a success message from the server,
      *         or [Result.failure] with an exception containing an error message.
      */
-    suspend fun login(email: String, password: String): Result<String>
+    suspend fun login(
+        email: String,
+        password: String,
+    ): Result<String>
 
     /**
      * Registers a new user account.
@@ -26,5 +28,8 @@ interface AuthRepository {
      * @return [Result.success] containing a success message from the server,
      *         or [Result.failure] with an exception containing an error message.
      */
-    suspend fun register(email: String, password: String): Result<String>
+    suspend fun register(
+        email: String,
+        password: String,
+    ): Result<String>
 }

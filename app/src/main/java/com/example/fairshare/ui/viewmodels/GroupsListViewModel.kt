@@ -25,14 +25,18 @@ sealed class GroupsState {
      *
      * @property groups List of groups the user belongs to.
      */
-    data class Success(val groups: List<Group>) : GroupsState()
+    data class Success(
+        val groups: List<Group>,
+    ) : GroupsState()
 
     /**
      * Failed to load groups.
      *
      * @property message Error message describing the failure.
      */
-    data class Error(val message: String) : GroupsState()
+    data class Error(
+        val message: String,
+    ) : GroupsState()
 }
 
 /**
@@ -44,9 +48,8 @@ sealed class GroupsState {
  * @property repo Repository for group operations. Defaults to [GroupsRepositoryImpl].
  */
 class GroupsListViewModel(
-    private val repo: GroupsRepository = GroupsRepositoryImpl()
+    private val repo: GroupsRepository = GroupsRepositoryImpl(),
 ) : ViewModel() {
-
     private val _state = MutableStateFlow<GroupsState>(GroupsState.Idle)
 
     /**
@@ -64,10 +67,11 @@ class GroupsListViewModel(
      *
      * @param name Display name for the new group.
      */
-    fun addGroup(name: String) = viewModelScope.launch(Dispatchers.IO) {
-        repo.addGroup(name)
-        loadGroups()
-    }
+    fun addGroup(name: String) =
+        viewModelScope.launch(Dispatchers.IO) {
+            repo.addGroup(name)
+            loadGroups()
+        }
 
     /**
      * Joins an existing group using its unique identifier.
@@ -77,10 +81,11 @@ class GroupsListViewModel(
      *
      * @param id Unique identifier of the group to join.
      */
-    fun joinGroup(id: String) = viewModelScope.launch(Dispatchers.IO) {
-        repo.joinGroup(id)
-        loadGroups()
-    }
+    fun joinGroup(id: String) =
+        viewModelScope.launch(Dispatchers.IO) {
+            repo.joinGroup(id)
+            loadGroups()
+        }
 
     /**
      * Loads all groups the current user belongs to.
@@ -88,14 +93,16 @@ class GroupsListViewModel(
      * Updates [state] to [GroupsState.Loading] during the operation,
      * then to [GroupsState.Success] or [GroupsState.Error] based on the result.
      */
-    fun loadGroups() = viewModelScope.launch {
-        _state.value = GroupsState.Loading
-        val res = repo.getAllGroups()
-        _state.value = res.fold(
-            onSuccess = { GroupsState.Success(it) },
-            onFailure = { GroupsState.Error(it.message ?: "Failed to load groups") }
-        )
-    }
+    fun loadGroups() =
+        viewModelScope.launch {
+            _state.value = GroupsState.Loading
+            val res = repo.getAllGroups()
+            _state.value =
+                res.fold(
+                    onSuccess = { GroupsState.Success(it) },
+                    onFailure = { GroupsState.Error(it.message ?: "Failed to load groups") },
+                )
+        }
 
     /**
      * Loads a specific group by its unique identifier.
@@ -109,10 +116,11 @@ class GroupsListViewModel(
         viewModelScope.launch {
             _state.value = GroupsState.Loading
             val res = repo.getGroupById(id)
-            _state.value = res.fold(
-                onSuccess = { GroupsState.Success(listOf(it)) },
-                onFailure = { GroupsState.Error(it.message ?: "Failed to load group") }
-            )
+            _state.value =
+                res.fold(
+                    onSuccess = { GroupsState.Success(listOf(it)) },
+                    onFailure = { GroupsState.Error(it.message ?: "Failed to load group") },
+                )
         }
     }
 }
