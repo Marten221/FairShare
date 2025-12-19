@@ -186,7 +186,6 @@ The project follows **Clean Architecture** principles with three main layers:
 - **Jetpack Compose**: Modern declarative UI framework
 - **MVVM Architecture**: ViewModels manage UI state
 - **Retrofit**: Type-safe HTTP client for API communication
-- **Room Database**: Local data persistence (if implemented)
 - **Coroutines & Flow**: Asynchronous programming
 - **Navigation Compose**: Type-safe navigation between screens
 - **Material 3**: Modern Material Design components
