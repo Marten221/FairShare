@@ -26,7 +26,7 @@ android {
             isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
+                "proguard-rules.pro",
             )
         }
     }
@@ -37,11 +37,20 @@ android {
     buildFeatures {
         compose = true
     }
+    testOptions {
+        animationsDisabled = true
+        unitTests.isReturnDefaultValues = true
+    }
 }
 
 tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
     compilerOptions {
-        jvmTarget.set(JvmTarget.fromTarget(libs.versions.jvm.target.get()))
+        jvmTarget.set(
+            JvmTarget.fromTarget(
+                libs.versions.jvm.target
+                    .get(),
+            ),
+        )
     }
 }
 
@@ -63,6 +72,7 @@ dependencies {
     implementation(libs.androidx.compose.foundation)
     implementation(libs.androidx.compose.material.icons.extended)
     implementation(libs.androidx.runner)
+    implementation(libs.core)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
